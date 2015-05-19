@@ -27,7 +27,7 @@ class Aligner{
 public:
 	ifstream unitigFile, readFile;
 	ofstream pathFile, noOverlapFile, notMappedFile;
-	atomic<size_t> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML;
+	atomic<size_t> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML,iter;
 	uint k;
 //	unordered_map<uint64_t,vector<uint32_t>> overlap2unitigs;
 //	unordered_map<uint,string> unitigCache;
@@ -57,6 +57,7 @@ public:
 		alignedRead=readNumber=noOverlapRead=notAligned=unitigNumber=overlaps=successMR=successMR2=sucessML=0;
 		offsetUpdate=1;
 		offsetUpdate<<=(2*(k-1));
+		iter=1;
 	}
 
 	void indexUnitigs();
