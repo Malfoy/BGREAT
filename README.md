@@ -27,6 +27,7 @@ Unitig computation with BCALM (see github.com/Malfoy/bcalm) :
 Output
 ====
 You can try 
+
 	$./bgreat 4 reads.fa unitig.dot  1 1
 
 The Output file will look like something like this
@@ -40,4 +41,4 @@ The other integer are the unitig number in the order they appears in the read, t
 
 
 
-!!!Warning : this version is linux intended and still in testing
+!!!Warning : this version is linux intended and still in testing!!!
