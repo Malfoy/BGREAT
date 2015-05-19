@@ -1,4 +1,4 @@
-CC=/usr/bin/g++
+CC=g++
 CFLAGS=  -Wall  -O3 -std=c++11 -march=native -pthread
 LDFLAGS=-pthread
 
