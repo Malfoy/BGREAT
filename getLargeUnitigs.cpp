@@ -4,18 +4,16 @@
 #include <string>
 #include <iterator>
 #include <ctime>
-#include <unordered_map>
 #include <algorithm>
 #include <cmath>
-#include <chrono>
 
 
 
 using namespace std;
 
 void getBigUnitigs(const string input, const string output, int length){
-	ifstream in(input);
-	ofstream out(output);
+	ifstream in(input.c_str(),ios::in);
+	ofstream out(output.c_str(),ios::out);
 	string line;
 	
 	out<<">N"<<endl;
@@ -40,7 +38,7 @@ int main(int argc, char ** argv)
 		string arg1=argv[1];
 		string arg2=argv[2];
 		string arg3=argv[3];
-		int l(stoi(arg3));
+		int l(atoi(arg3.c_str()));
 		getBigUnitigs(arg1,arg2,l);
 	}
 }

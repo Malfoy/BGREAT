@@ -36,7 +36,7 @@ public:
 	vector<string> unitigs;
 	uint64_t offsetUpdate;
 	unsigned char coreNumber;
-	int errorsMax,tryNumber;
+	uint errorsMax,tryNumber;
 	mutex unitigMutex, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
 	string unitigFileName;
 	chrono::system_clock::time_point startChrono;

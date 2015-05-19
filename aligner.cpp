@@ -60,7 +60,7 @@ void Aligner::getReads(vector<string>& reads, uint n){
 	string read,header,inter;
 	char c;
 
-	for(int i(0);i<n;++i){
+	for(uint i(0);i<n;++i){
 		getline(readFile,header);
 		getline(readFile,read);
 	point:
@@ -141,7 +141,7 @@ string mutate(string read,int n){
 string Aligner::num2str(uint64_t num){
 	string str;
 	int nuc;
-	for(int i(0);i<k-1;i++){
+	for(uint i(0);i<k-1;i++){
 		nuc=num%4;
 		switch (nuc){
 			case 0:str.push_back('A');break;
@@ -158,7 +158,7 @@ string Aligner::num2str(uint64_t num){
 
 uint64_t Aligner::str2num(const string& str){
 	uint64_t res(0);
-	for(int i(0);i<str.size();i++){
+	for(uint i(0);i<str.size();i++){
 		res<<=2;
 		switch (str[i]){
 			case 'A':res+=0;break;
@@ -331,7 +331,7 @@ int missmatchNumber(const string& seq1, const string& seq2, unsigned int n){
 		exit(0);
 	}
 
-	char miss(0);
+	unsigned char miss(0);
 	for(size_t i(0); i<seq2.size(); ++i){
 		if(seq2[i]!=seq1[i]){
 			if(++miss>n){
@@ -350,7 +350,7 @@ int errorNumber(const string& seq1, const string& seq2, unsigned int n){
 	}
 	size_t size(max(seq1.size(),seq2.size()));
 
-	char miss(0);
+	unsigned char miss(0);
 	for(size_t i(0); i<size; ++i){
 		if(seq2[i]!=seq1[i]){
 			if(++miss>n){
@@ -374,11 +374,11 @@ vector<uNumber> Aligner::alignRead3(const string& read, bool& overlapFound, int 
 
 	overlaps+=listOverlap.size();
 	overlapFound=true;
-	for(int start(0); start<=min(tryNumber-1,(int)listOverlap.size()-1); ++start){
+	for(uint start(0); start<=min(tryNumber-1,(uint)listOverlap.size()-1); ++start){
 		vector<uNumber> pathBegin;
 		int errorBegin(checkBeginExhaustive(read,listOverlap[start],pathBegin,errors));
 		if(errorBegin<=errors){
-			for(int end((int)listOverlap.size()-1); end>=max(start,(int)listOverlap.size()-tryNumber); --end){
+			for(uint end((int)listOverlap.size()-1); end>=max(start,(uint)listOverlap.size()-tryNumber); --end){
 				vector<uNumber> pathEnd;
 				int errorsEnd(checkEndExhaustive(read,listOverlap[end],pathEnd,errors-errorBegin));
 				if(errorsEnd+errorBegin<=errors){
@@ -420,7 +420,7 @@ vector<uNumber> Aligner::alignRead4(const string& read, bool& overlapFound, int 
 
 	overlaps+=listOverlap.size();
 	overlapFound=true;
-	for(int start(0); start<listOverlap.size(); ++start){
+	for(uint start(0); start<listOverlap.size(); ++start){
 		vector<uNumber> pathBegin;
 		int errorBegin(checkBeginExhaustive(read,listOverlap[start],pathBegin,errors));
 		if(errorBegin<=errors){
@@ -1197,7 +1197,7 @@ void Aligner::alignPartExhaustive(){
 		}
 		readMutex.unlock();
 		for(size_t i(0);i<multiread.size();++i){
-			read=multiread[i],0;
+			read=multiread[i];
 			overlapFound=false;
 			path=alignRead4(read,overlapFound,errorsMax);
 			if(path.size()!=0){
