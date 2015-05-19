@@ -5,7 +5,7 @@
 //  Copyright (c) 2015 malfoy. All rights reserved.
 //
 
-#include "Aligner.h"
+#include "aligner.h"
 #include <thread>
 #include <iostream>
 #include <fstream>
