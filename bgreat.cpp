@@ -20,7 +20,7 @@
 #include <chrono>
 #include <map>
 #include <set>
-#include "Aligner.h"
+#include "aligner.h"
 
 
 using namespace std;
