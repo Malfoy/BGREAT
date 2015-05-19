@@ -25,7 +25,7 @@ all: $(EXEC)
 getLargeUnitigs: getLargeUnitigs.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-Aligner.o: Aligner.cpp Aligner.h
+aligner.o: aligner.cpp aligner.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 bgreat: bgreat.o   Aligner.o
@@ -34,7 +34,7 @@ bgreat: bgreat.o   Aligner.o
 getBigUnitigs.o: getBigUnitigs.cpp
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-bgreat.o: bgreat.cpp  Aligner.h
+bgreat.o: bgreat.cpp  aligner.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 
