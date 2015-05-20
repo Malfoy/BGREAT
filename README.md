@@ -4,7 +4,7 @@ De Bruijn Graph Read Mapping Tool
 
 Compilation
 ====
-  $make
+	$make
 
 Usage
 ====
@@ -13,7 +13,7 @@ Usage
 We propose the following workflow to compute unitigs from a set of reads:
 
 
-Kmer counting with DSK (see http://minia.genouest.org/dsk/):
+Kmer counting with DSK (see http://minia.genouest.org/dsk/) :
 
 	$dsk -file reads.fasta -kmer-size k -abundance-min c -out reads
 
@@ -36,8 +36,9 @@ The Output file will look like something like this
 
 1.1.3.4.-6.
 
-The first integer is the starting position of the read in the first Unitig.
-The other integer are the unitig number in the order they appears in the read, the minus sign mean that the reverseComplement of the unitig should be used.
+The first integer is the starting position of the read in the first unitig.
+
+The other integers are the unitig numbers in the order they appear in the read, the minus sign mean that the reverse complement of the unitig should be used.
 
 
 
