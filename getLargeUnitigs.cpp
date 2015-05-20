@@ -6,6 +6,10 @@
 #include <ctime>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iterator>
 
 
 

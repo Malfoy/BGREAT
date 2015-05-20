@@ -378,7 +378,7 @@ vector<uNumber> Aligner::alignRead3(const string& read, bool& overlapFound, int 
 		vector<uNumber> pathBegin;
 		int errorBegin(checkBeginExhaustive(read,listOverlap[start],pathBegin,errors));
 		if(errorBegin<=errors){
-			for(uint end((int)listOverlap.size()-1); end>=max(start,(uint)listOverlap.size()-tryNumber); --end){
+			for(int end((int)listOverlap.size()-1); end>=max((int)start,(int)listOverlap.size()-(int)tryNumber); --end){
 				vector<uNumber> pathEnd;
 				int errorsEnd(checkEndExhaustive(read,listOverlap[end],pathEnd,errors-errorBegin));
 				if(errorsEnd+errorBegin<=errors){
