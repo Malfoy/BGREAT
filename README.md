@@ -20,7 +20,7 @@ Kmer counting with DSK (see http://minia.genouest.org/dsk/) :
 	$dsk2ascii -file reads.h5 -out kmers
 
 
-Unitig computation with BCALM (see github.com/Malfoy/bcalm) :
+Unitig computation with BCALM (see https://github.com/Malfoy/bcalm) :
 
 	$bcalm kmers unitigs.dot 6
 
