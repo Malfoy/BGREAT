@@ -1,3 +1,26 @@
+/*****************************************************************************
+ *   Bgreat : De Bruijn Graph Read Mapping Tool
+ *   Copyright (C) 2014  INRIA
+ *   Authors: Antoine Limasset
+ *   Contact: antoine.limasset@inria.fr, INRIA/IRISA/GenScale, Campus de Beaulieu, 35042 Rennes Cedex, France
+ *   Source: https://github.com/Malfoy/BGREAT
+ *
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*****************************************************************************/
+
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -23,16 +46,19 @@
 #include "aligner.h"
 
 
+
 using namespace std;
 
 
-int main(int argc, char ** argv)
-{
+
+int main(int argc, char ** argv){
 	srand (time(NULL));
+
 	if(argc<4){
 		cout<<"Need k , reads file , unitig file, errors allowed and number of thread ..."<<endl;
 		exit(0);
 	}
+
 	if(argc==6){
 		string arg1=argv[1];
 		string reads=argv[2];
@@ -40,9 +66,7 @@ int main(int argc, char ** argv)
 		string errors=argv[4];
 		string threads=argv[5];
 		int ka=stoi(arg1);
-		//int nCores=stoi(arg3);
 		auto start=chrono::system_clock::now();
-
 		Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,stoi(threads),stoi(errors));
 		supervisor.indexUnitigs();
 		supervisor.alignAll(true);
@@ -58,9 +82,7 @@ int main(int argc, char ** argv)
 		string brute=argv[6];
 		if(brute=="-b"){
 			int ka=stoi(arg1);
-			//int nCores=stoi(arg3);
 			auto start=chrono::system_clock::now();
-
 			Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,stoi(threads),stoi(errors));
 			supervisor.indexUnitigs();
 			supervisor.alignAll(false);

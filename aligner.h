@@ -1,10 +1,25 @@
+/*****************************************************************************
+ *   Bgreat : De Bruijn Graph Read Mapping Tool
+ *   Copyright (C) 2014  INRIA
+ *   Authors: Antoine Limasset
+ *   Contact: antoine.limasset@inria.fr, INRIA/IRISA/GenScale, Campus de Beaulieu, 35042 Rennes Cedex, France
+ *   Source: https://github.com/Malfoy/BGREAT
+ *
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*****************************************************************************/
 
-//  Aligner.h
-//  BGREAT
-//
-//  Created by malfoy on 09/04/2015.
-//  Copyright (c) 2015 malfoy. All rights reserved.
-//
 
 #ifndef __BGREAT__Aligner__
 #define __BGREAT__Aligner__
@@ -66,7 +81,7 @@ public:
 	void alignPartExhaustive();
 	void indexUnitigsAux();
 	vector<pair<uint64_t,uint>> getListOverlap(const string& read);
-	int checkEndExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, int errors);
+	uint8_t checkEndExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
 	bool cover(const string& read, vector<pair<uint64_t,uint>>& listOverlap, size_t start, size_t end,vector<uNumber>& path);
 	bool cover2(const string& read, const vector<pair<uint64_t,uint>>& listOverlap, const size_t start, size_t end,vector<uNumber>& path);
 	size_t mapOnRightAll(const string &read, vector<uNumber>& path, pair<uint64_t, uint> overlap, const vector<pair<uint64_t,uint>>& listOverlap, bool& end, size_t start);
@@ -75,21 +90,21 @@ public:
 	bool mapOnLeftEndAll(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap);
 	bool mapOnLeftEndFirst(const string &read, vector<uNumber>& path,const pair<uint64_t, uint>& overlap);
 	bool mapOnLeftEndMax(const string &read, vector<uNumber>& path, const  pair<uint64_t, uint>& overlap);
-	int mapOnLeftEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& , int errors);
-	int mapOnRightEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& , int errors);
+	uint8_t mapOnLeftEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& , uint8_t errors);
+	uint8_t mapOnRightEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& , uint8_t errors);
 	string getUnitig(int position);
-	string getUnitig2(uint position);
+	string getUnitigFile(uint position);
 	void getReads(vector<string>& reads,uint);
-	vector<uNumber> alignRead3(const string& read, bool& overlapFound, int errors,bool rc);
-	int checkBeginExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, int errors);
-	int checkPair2(const pair<uint64_t, uint>& overlap1, const pair<uint64_t, uint>& overlap2, const string& read,uNumber& path,int errorsAllowed);
-	int coverGreedy(const string& read, const vector<pair<uint64_t,uint>>& listOverlap, const size_t start, size_t end, vector<uNumber>& path, int  errors, bool&);
-	pair<size_t,int> mapOnRight2(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap, const  vector<pair<uint64_t,uint>>& listOverlap, bool& ended,size_t start, int errors);
-	int mapOnRightEndGreedy(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , int errors);
-	int checkBeginGreedy(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, int errors);
-	int mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , int errors);
-	vector<uNumber> alignRead4(const string& read, bool& overlapFound, int errors);
-	int checkEndGreedy(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, int errors);
+	vector<uNumber> alignReadGreedy(const string& read, bool& overlapFound, uint8_t errors,bool rc);
+	uint8_t checkBeginExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t checkPair(const pair<uint64_t, uint>& overlap1, const pair<uint64_t, uint>& overlap2, const string& read,uNumber& path,uint8_t errorsAllowed);
+	uint8_t coverGreedy(const string& read, const vector<pair<uint64_t,uint>>& listOverlap, const size_t start, size_t end, vector<uNumber>& path, uint8_t  errors, bool&);
+	pair<size_t,int> mapOnRight2(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap, const  vector<pair<uint64_t,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
+	uint8_t mapOnRightEndGreedy(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
+	uint8_t checkBeginGreedy(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
+	vector<uNumber> alignReadExhaustive(const string& read, bool& overlapFound, uint8_t errors);
+	uint8_t checkEndGreedy(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
 	string readUnitig(uint position);
 	vector<pair<string,uNumber>> getBegin(uint64_t);
 	vector<pair<string,uNumber>> getEnd(uint64_t);
@@ -101,6 +116,7 @@ public:
 	vector<uNumber> getEndNumber(uint64_t bin);
 	void updateRC(uint64_t&	min, char nuc);
 	void update(uint64_t&	min, char nuc);
+	pair<size_t,uint8_t> mapOnRight(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap, const  vector<pair<uint64_t,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
 
 };
 
