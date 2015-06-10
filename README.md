@@ -8,23 +8,26 @@ Compilation
 
 Usage
 ====
-	$bgreat  reads_file k unitigs_file number_missmatchs_allowed number_threads path_file no_overlap_file not_aligned_file
+	$bgreat  read_file k unitig_file n_missmatch n_thread path_file no_overlap_file not_aligned_file
 
 The default value are:
 
 k:31
 
-unitigs_file: unitig.dot
+unitig_file: unitig.dot
 
-number_missmatchs_allowed: 2
+n_missmatch_allowed: 2
 
-number_threads: 1
+n_thread: 1
 
 path_file: paths
 
 no_overlap_file: noOverlap.fa
 
 not_aligned_file: notAligned.fa
+
+Workflow
+====
 
 
 We propose the following workflow to compute unitigs from a set of reads:
