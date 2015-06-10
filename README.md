@@ -8,7 +8,24 @@ Compilation
 
 Usage
 ====
-	$bgreat k reads.fasta unitigs.dot number_missmatchs_allowed number_threads
+	$bgreat  reads_file k unitigs_file number_missmatchs_allowed number_threads path_file no_overlap_file not_aligned_file
+
+The default value are:
+
+k:31
+
+unitigs_file: unitig.dot
+
+number_missmatchs_allowed: 2
+
+number_threads: 1
+
+path_file: paths
+
+no_overlap_file: noOverlap.fa
+
+not_aligned_file: notAligned.fa
+
 
 We propose the following workflow to compute unitigs from a set of reads:
 
@@ -26,9 +43,9 @@ Unitig computation with BCALM (see https://github.com/Malfoy/bcalm) :
 
 Output
 ====
-You can try 
+You can try
 
-	$./bgreat 4 reads.fa unitig.dot  1 1
+	$./bgreat reads.fa 4 unitig.dot
 
 The Output file will look like something like this
 
