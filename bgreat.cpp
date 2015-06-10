@@ -54,18 +54,67 @@ using namespace std;
 int main(int argc, char ** argv){
 	srand (time(NULL));
 
-	if(argc<4){
-		cout<<"Need k , reads file , unitig file, errors allowed and number of thread ..."<<endl;
+	if(argc<2){
+		cout<<"Arguments : [read file]  [k](31) [unitig file](unitig.dot) [error allowed](2) [number of thread](1) [path file](path) [no overlap file](noOverlap.fa) [not aligned file](notAligned.fa)"<<endl;
 		exit(0);
 	}
 
+	if(argc==2){
+		string reads=argv[1];
+		string unitigs="unitig.dot";
+		int ka=31;
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,1,2);
+		supervisor.indexUnitigs();
+		supervisor.alignAll(true);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+	}
+
+
+	if(argc==3){
+		string reads=argv[1];
+		string karg=argv[2];
+		string unitigs="unitig.dot";
+		int ka=stoi(karg);
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,1,2);
+		supervisor.indexUnitigs();
+		supervisor.alignAll(true);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+	}
+
+	if(argc==4){
+		string reads=argv[1];
+		string karg=argv[2];
+		string unitigs=argv[3];
+		int ka=stoi(karg);
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,1,2);
+		supervisor.indexUnitigs();
+		supervisor.alignAll(true);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+	}
+
+	if(argc==5){
+		string reads=argv[1];
+		string karg=argv[2];
+		string unitigs=argv[3];
+		string errors=argv[4];
+		int ka=stoi(karg);
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,1,stoi(errors));
+		supervisor.indexUnitigs();
+		supervisor.alignAll(true);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+	}
+
 	if(argc==6){
-		string arg1=argv[1];
-		string reads=argv[2];
+		string reads=argv[1];
+		string karg=argv[2];
 		string unitigs=argv[3];
 		string errors=argv[4];
 		string threads=argv[5];
-		int ka=stoi(arg1);
+		int ka=stoi(karg);
 		auto start=chrono::system_clock::now();
 		Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,stoi(threads),stoi(errors));
 		supervisor.indexUnitigs();
@@ -74,22 +123,72 @@ int main(int argc, char ** argv){
 	}
 
 	if(argc==7){
-		string arg1=argv[1];
-		string reads=argv[2];
+		string reads=argv[1];
+		string karg=argv[2];
 		string unitigs=argv[3];
 		string errors=argv[4];
 		string threads=argv[5];
-		string brute=argv[6];
-		if(brute=="-b"){
-			int ka=stoi(arg1);
-			auto start=chrono::system_clock::now();
-			Aligner supervisor(reads,unitigs,"paths","noOverlap.fa","notAligned.fa",ka,stoi(threads),stoi(errors));
-			supervisor.indexUnitigs();
-			supervisor.alignAll(false);
-			auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+		string pathFile=argv[6];
+		int ka=stoi(karg);
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,pathFile,"noOverlap.fa","notAligned.fa",ka,stoi(threads),stoi(errors));
+		supervisor.indexUnitigs();
+		supervisor.alignAll(true);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+	}
+
+	if(argc==8){
+		string reads=argv[1];
+		string karg=argv[2];
+		string unitigs=argv[3];
+		string errors=argv[4];
+		string threads=argv[5];
+		string pathFile=argv[6];
+		string noOverlapFile=argv[7];
+		int ka=stoi(karg);
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,pathFile,noOverlapFile,"notAligned.fa",ka,stoi(threads),stoi(errors));
+		supervisor.indexUnitigs();
+		supervisor.alignAll(true);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+	}
+
+	if(argc==9){
+		string reads=argv[1];
+		string karg=argv[2];
+		string unitigs=argv[3];
+		string errors=argv[4];
+		string threads=argv[5];
+		string pathFile=argv[6];
+		string noOverlapFile=argv[7];
+		string notAlignedFile=argv[8];
+		int ka=stoi(karg);
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,pathFile,noOverlapFile,notAlignedFile,ka,stoi(threads),stoi(errors));
+		supervisor.indexUnitigs();
+		supervisor.alignAll(true);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
+	}
+
+	if(argc==10){
+		string reads=argv[1];
+		string karg=argv[2];
+		string unitigs=argv[3];
+		string errors=argv[4];
+		string threads=argv[5];
+		string pathFile=argv[6];
+		string noOverlapFile=argv[7];
+		string notAlignedFile=argv[8];
+		string opt=argv[9];
+		if(opt=="-b"){
+		int ka=stoi(karg);
+		auto start=chrono::system_clock::now();
+		Aligner supervisor(reads,unitigs,pathFile,noOverlapFile,notAlignedFile,ka,stoi(threads),stoi(errors));
+		supervisor.indexUnitigs();
+		supervisor.alignAll(false);
+		auto end=chrono::system_clock::now();auto waitedFor=end-start;cout<<"Last for "<<chrono::duration_cast<chrono::seconds>(waitedFor).count()<<" seconds"<<endl<<endl;
 		}else{
-			cout<<"not recognized option "<<brute<<endl;
-			cout<<"Did you mean -b for bruteforce ?"<<endl;
+			cout<<"not recognized option did you mean -b for bruteforce ?"<<endl;
 		}
 
 	}
