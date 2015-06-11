@@ -94,7 +94,7 @@ public:
 	uint8_t mapOnRightEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& , uint8_t errors);
 	string getUnitig(int position);
 	string getUnitigFile(uint position);
-	void getReads(vector<string>& reads,uint);
+	void getReads(vector<pair<string,string>>& reads, uint n);
 	vector<uNumber> alignReadGreedy(const string& read, bool& overlapFound, uint8_t errors,bool rc);
 	uint8_t checkBeginExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
 	uint8_t checkPair(const pair<uint64_t, uint>& overlap1, const pair<uint64_t, uint>& overlap2, const string& read,uNumber& path,uint8_t errorsAllowed);

@@ -76,7 +76,7 @@ string reverseComplement(const string& s){
 
 
 //Parse reads
-void Aligner::getReads(vector<string>& reads, uint n){
+void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 	reads={};
 	string read,header,inter;
 	char c;
@@ -96,7 +96,7 @@ void Aligner::getReads(vector<string>& reads, uint n){
 					}
 				}
 				if(!fail){
-					reads.push_back(read);
+					reads.push_back({header,read});
 				}
 			}
 			read="";
@@ -115,7 +115,7 @@ void Aligner::getReads(vector<string>& reads, uint n){
 						}
 					}
 					if(!fail){
-						reads.push_back(read);
+						reads.push_back({header,read});
 					}
 				}
 				return;
@@ -1048,9 +1048,9 @@ vector<pair<uint64_t,uint>> Aligner::getListOverlap(const string& read){
 
 
 void Aligner::alignPartExhaustive(){
-	vector<string> multiread;
+	vector<pair<string,string>> multiread;
 	vector<uNumber> path;
-	string read;
+	string read,header;
 	bool overlapFound(false);
 	while(!readFile.eof()){
 		readMutex.lock();
@@ -1059,7 +1059,8 @@ void Aligner::alignPartExhaustive(){
 		}
 		readMutex.unlock();
 		for(size_t i(0);i<multiread.size();++i){
-			read=multiread[i];
+			header=multiread[i].first;
+			read=multiread[i].second;
 			overlapFound=false;
 			path=alignReadExhaustive(read,overlapFound,errorsMax);
 			if(path.size()!=0){
@@ -1072,13 +1073,13 @@ void Aligner::alignPartExhaustive(){
 				if(!overlapFound){
 						noOverlapMutex.lock();
 						{
-							noOverlapFile<<">A"<<endl<<read<<endl;
+							noOverlapFile<<header<<endl<<read<<endl;
 						}
 						noOverlapMutex.unlock();
 				}else{
 					notMappedMutex.lock();
 					{
-						notMappedFile<<">A"<<endl<<read<<endl;
+						notMappedFile<<header<<endl<<read<<endl;
 					}
 					notMappedMutex.unlock();
 				}
@@ -1100,9 +1101,9 @@ void Aligner::alignPartExhaustive(){
 
 
 void Aligner::alignPartGreedy(){
-	vector<string> multiread;
+	vector<pair<string,string>> multiread;
 	vector<uNumber> path;
-	string read;
+	string read,header;
 	bool overlapFound(false);
 	while(!readFile.eof()){
 		readMutex.lock();
@@ -1112,7 +1113,9 @@ void Aligner::alignPartGreedy(){
 		readMutex.unlock();
 		for(size_t i(0);i<multiread.size();++i){
 			overlapFound=false;
-			read=multiread[i];
+			header=multiread[i].first;
+			read=multiread[i].second;
+			cout<<header<<" "<<read<<endl;
 			path=alignReadGreedy(read,overlapFound,errorsMax,false);
 			if(path.size()!=0){
 				pathMutex.lock();
@@ -1121,21 +1124,16 @@ void Aligner::alignPartGreedy(){
 				}
 				pathMutex.unlock();
 			}else{
-				noOverlapMutex.lock();
-				{
-					notMappedFile<<">A"<<endl<<read<<endl;
-				}
-				noOverlapMutex.unlock();
 				if(!overlapFound){
 					noOverlapMutex.lock();
 					{
-						noOverlapFile<<">A"<<endl<<read<<endl;
+						notMappedFile<<header<<endl<<read<<endl;
 					}
 					noOverlapMutex.unlock();
 				}else{
 					notMappedMutex.lock();
 					{
-						notMappedFile<<">A"<<endl<<read<<endl;
+						notMappedFile<<header<<endl<<read<<endl;
 					}
 					notMappedMutex.unlock();
 				}
