@@ -52,13 +52,16 @@ You can try
 
 The Output file will look like something like this
 
-0.1.2.
+0.1.2.5.
 
-1.1.3.4.-6.
+1.1.3.4.-6.0.
 
 The first integer is the starting position of the read in the first unitig.
 
+The last integer is the number of char of ther last unitig that is used for the alignment, 0 mean that the whole unitig is used.
+
 The other integers are the unitig numbers in the order they appear in the read, the minus sign mean that the reverse complement of the unitig should be used.
+
 
 
 

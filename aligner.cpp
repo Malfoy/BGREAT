@@ -650,7 +650,7 @@ uint8_t Aligner::mapOnRightEndGreedy(const string &read, vector<uNumber>& path, 
 uint8_t Aligner::mapOnRightEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors){
 	string unitig,readLeft(read.substr(overlap.second+k-1));
 	vector<uNumber> path2keep;
-	if(readLeft.empty()){return 0;}
+	if(readLeft.empty()){path.push_back(0);return 0;}
 	auto rangeUnitigs(getBegin(overlap.first));
 	uint8_t miniMiss(errors+1), miniMissIndice(9);
 	bool ended(false);
@@ -683,8 +683,11 @@ uint8_t Aligner::mapOnRightEndExhaustive(const string &read, vector<uNumber>& pa
 	}
 
 	if(miniMiss<=errors){
-		path.push_back(rangeUnitigs[miniMissIndice].second);
-		if(!ended){
+		if(ended){
+			path.push_back(rangeUnitigs[miniMissIndice].second);
+			path.push_back(readLeft.size()+k-1);
+		}else{
+			path.push_back(rangeUnitigs[miniMissIndice].second);
 			path.insert(path.end(), path2keep.begin(),path2keep.end());
 		}
 		successMR++;
@@ -924,10 +927,14 @@ uint8_t Aligner::checkBeginGreedy(const string& read, pair<uint64_t, uint>& over
 uint8_t Aligner::checkEndExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors){
 	string readLeft(read.substr(overlap.second+k-1)),unitig;
 	vector<uNumber> path2keep;
-	if(readLeft.empty()){return 0;}
+	if(readLeft.empty()){
+		path.push_back(0);
+		return 0;
+	}
 	auto rangeUnitigs(getBegin(overlap.first));
 	uint8_t minMiss(errors+1),indiceMinMiss(9);
 	bool ended(false);
+	int offset(-2);
 
 	for(uint i(0); i<rangeUnitigs.size(); ++i){
 		unitig=(rangeUnitigs[i].first);
@@ -937,6 +944,7 @@ uint8_t Aligner::checkEndExhaustive(const string& read, pair<uint64_t, uint>& ov
 				minMiss=miss;
 				indiceMinMiss=i;
 				ended=true;
+				offset=readLeft.size()+k-1;
 			}
 		}else{
 			uint8_t miss(missmatchNumber(unitig.substr(k-1),readLeft.substr(0,unitig.size()-k+1), errors));
@@ -955,8 +963,11 @@ uint8_t Aligner::checkEndExhaustive(const string& read, pair<uint64_t, uint>& ov
 	}
 
 	if(minMiss<=errors){
-		path.push_back(rangeUnitigs[indiceMinMiss].second);
-		if(!ended){
+		if(ended){
+			path.push_back(rangeUnitigs[indiceMinMiss].second);
+			path.push_back(offset);
+		}else{
+			path.push_back(rangeUnitigs[indiceMinMiss].second);
 			path.insert(path.end(), path2keep.begin(),path2keep.end());
 		}
 	}
