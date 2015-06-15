@@ -784,7 +784,7 @@ uint8_t Aligner::checkPair(const pair<uint64_t, uint>& overlap1, const pair<uint
 			positionget1=rangeUnitigs1[i].second;
 			for(uint j(0); j<rangeUnitigs2.size(); ++j){
 				positionget2=rangeUnitigs2[j].second;
-				if(positionget2==positionget1 and rangeUnitigs1[i].first.size()==(overlap2.second-overlap1.second+k-1)){
+				if(positionget2==positionget1){
 					number=positionget1;
 					return 0;
 				}

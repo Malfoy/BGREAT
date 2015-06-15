@@ -26,12 +26,12 @@ shutil.rmtree('.bcalmtmp')
 
 
 print "PHASE 3 : Map Reads on graph"
-subprocess.call(['./BGREAT',k,readFile,unitigFile,'2','1'])
+subprocess.call(['bgreat',k,readFile,unitigFile,'2','1'])
 os.remove('paths')
 
 print "PHASE 4 : Map Reads on big unitigs with bowtie2"
 #  see sourceforge.net/projects/bowtie-bio/files/bowtie2/2.2.5/
-subprocess.call(['./getBigUnitig',unitigFile,'big.fa',readsize])
+subprocess.call(['getLargeUnitig',unitigFile,'big.fa',readsize])
 subprocess.call(['bowtie2-build','big.fa','index','-q'])
 subprocess.call(['bowtie2','-f','--very-fast','-x','index','-U','notAligned.fa','-t','-p','4','-S','out.sam'])
 
