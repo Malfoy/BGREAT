@@ -11,20 +11,35 @@ Usage
 	$bgreat  read_file k unitig_file n_missmatch n_thread path_file no_overlap_file not_aligned_file
 
 The default value are:
+ 
 
-k:31
+The k value of your De Bruijn graph
+"k":31
+ 
 
-unitig_file: unitig.dot
+The file containing your unitigs
+"unitig_file": unitig.dot
+ 
 
-n_missmatch_allowed: 2
+The number of missmatches allowed in the alignment
+"n_missmatch_allowed": 2
+ 
 
-n_thread: 1
+The number of thread used for mapping
+"n_thread": 1
+ 
 
-path_file: paths
+The paths ouput file 
+"path_file": paths
+ 
 
-no_overlap_file: noOverlap.fa
+The output file with read without overlap, that may be mapped by a regular aligner on large unitigs
+"no_overlap_file": noOverlap.fa
+ 
 
-not_aligned_file: notAligned.fa
+The outputfile with read that have an overlap but could not be mapped by BGREAT
+"not_aligned_file": notAligned.fa
+
 
 Workflow
 ====
