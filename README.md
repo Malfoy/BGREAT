@@ -8,7 +8,8 @@ Compilation
 
 Usage
 ====
-	$bgreat -r read_file -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file -a not_aligned_file
+	$bgreat -r read_file -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file 
+	-a not_aligned_file
 
 
 The default value are:
