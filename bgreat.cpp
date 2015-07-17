@@ -43,15 +43,68 @@
 #include <chrono>
 #include <map>
 #include <set>
+#include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "aligner.h"
 
 
 
 using namespace std;
 
-
-
 int main(int argc, char ** argv){
+	string reads("reads.fa");
+	string unitigs("unitig.dot");
+	string pathFile("paths");
+	string noOverlapFile("noOverlap");
+	string notAlignedFile("notAligned");
+	int errors(2);
+	int threads(2);
+	int ka(31);
+	int c;
+	bool brute(false),incomplete(false);
+	
+	 while ((c = getopt (argc, argv, "r:k:g:m:t:p:o:a:bi")) != -1){
+	 	switch(c){
+	 		case 'r':
+	 			reads=optarg;
+	 		break;
+	 		case 'k':
+	 			ka=stoi(optarg);
+	 		break;
+	 		case 'g':
+	 			unitigs=(optarg);
+	 		break;
+	 		case 'm':
+	 			errors=stoi(optarg);
+	 		break;
+	 		case 't':
+	 			threads=stoi(optarg);
+	 		break;
+	 		case 'p':
+	 			pathFile=(optarg);
+	 		break;
+	 		case 'o':
+	 			noOverlapFile=(optarg);
+	 		break;
+	 		case 'a':
+	 			notAlignedFile=(optarg);
+	 		break;
+	 		case 'b':
+	 			brute=(true);
+	 		break;
+	 		case 'i':
+	 			incomplete=(true);
+	 		break;
+	 	}
+	 }
+	Aligner supervisor(reads,unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete);
+	supervisor.indexUnitigs();
+	supervisor.alignAll(!brute);
+}
+/*
+int main2(int argc, char ** argv){
 	srand (time(NULL));
 
 	if(argc<2){
@@ -192,4 +245,7 @@ int main(int argc, char ** argv){
 		}
 
 	}
+	
+	return 0;
 }
+*/

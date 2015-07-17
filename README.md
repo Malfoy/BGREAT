@@ -8,13 +8,14 @@ Compilation
 
 Usage
 ====
-	$bgreat  read_file k unitig_file n_missmatch n_thread path_file no_overlap_file not_aligned_file
+	$bgreat -r read_file -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file -a not_aligned_file
+
 
 The default value are:
  
 
 The k value of your De Bruijn graph
-"k":31
+"k_value":31
  
 
 The file containing your unitigs
@@ -78,6 +79,8 @@ The last integer is the number of char of ther last unitig that is used for the 
 The other integers are the unitig numbers in the order they appear in the read, the minus sign mean that the reverse complement of the unitig should be used.
 
 
+Experimental option (in developpement)
+====
+-b for bruteforce exploration (way slower but a bit more precise)
 
-
-!!!Warning : this version is linux intended and still in testing!!!
+-i to allow partial mapping (experimental)

@@ -40,6 +40,7 @@ using namespace std;
 
 class Aligner{
 public:
+	bool partial;
 	ifstream unitigFile, readFile;
 	ofstream pathFile, noOverlapFile, notMappedFile;
 	atomic<size_t> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML,iter;
@@ -57,7 +58,7 @@ public:
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory;
 
-	Aligner(const string& reads, const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed){
+	Aligner(const string& reads, const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
 		readFile.open(reads);
@@ -69,6 +70,7 @@ public:
 		errorsMax=errorsAllowed;
 		tryNumber=2;
 		fullMemory=true;
+		partial=bpartial;
 		alignedRead=readNumber=noOverlapRead=notAligned=unitigNumber=overlaps=successMR=successMR2=sucessML=0;
 		offsetUpdate=1;
 		offsetUpdate<<=(2*(k-1));
@@ -117,6 +119,8 @@ public:
 	void updateRC(uint64_t&	min, char nuc);
 	void update(uint64_t&	min, char nuc);
 	pair<size_t,uint8_t> mapOnRight(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap, const  vector<pair<uint64_t,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
+	uint8_t mapOnRightEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
+	uint8_t mapOnLeftEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
 
 };
 
