@@ -99,9 +99,13 @@ int main(int argc, char ** argv){
 	 		break;
 	 	}
 	 }
-	Aligner supervisor(reads,unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete);
-	supervisor.indexUnitigs();
-	supervisor.alignAll(!brute);
+	 if(reads!=""){
+               	Aligner supervisor(reads,unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete);
+               	supervisor.indexUnitigs();
+               	supervisor.alignAll(!brute);
+       	}else{
+              	cout<<"-r read_file -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file -a not_aligned_file"<<endl;
+        }
 }
 /*
 int main2(int argc, char ** argv){
