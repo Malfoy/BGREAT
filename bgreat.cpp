@@ -54,7 +54,7 @@
 using namespace std;
 
 int main(int argc, char ** argv){
-	string reads("reads.fa");
+	string reads;
 	string unitigs("unitig.dot");
 	string pathFile("paths");
 	string noOverlapFile("noOverlap");
@@ -100,9 +100,9 @@ int main(int argc, char ** argv){
 	 	}
 	 }
 	 if(reads!=""){
-               	Aligner supervisor(reads,unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete);
+               	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete);
                	supervisor.indexUnitigs();
-               	supervisor.alignAll(!brute);
+               	supervisor.alignAll(!brute,reads);
        	}else{
               	cout<<"-r read_file -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file -a not_aligned_file"<<endl;
         }

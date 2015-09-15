@@ -8,7 +8,7 @@ Compilation
 
 Usage
 ====
-	$bgreat -r read_file -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file 
+	$bgreat -r read_files -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file 
 	-a not_aligned_file
 
 
@@ -78,6 +78,11 @@ The first integer is the starting position of the read in the first unitig.
 The last integer is the number of char of ther last unitig that is used for the alignment, 0 mean that the whole unitig is used.
 
 The other integers are the unitig numbers in the order they appear in the read, the minus sign mean that the reverse complement of the unitig should be used.
+
+You can give multiple fasta file in input by separating the file names with a coma
+	
+	$./bgreat reads.fa,reads2.fa 4 unitig.dot
+
 
 
 Experimental option (in developpement)

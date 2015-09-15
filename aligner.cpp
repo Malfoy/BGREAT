@@ -1349,8 +1349,33 @@ void Aligner::indexUnitigs(){
 }
 
 
-void Aligner::alignAll(bool greedy){
+void Aligner::alignAll(bool greedy, const string& reads){
 	startChrono=chrono::system_clock::now();
+	uint last(0);
+	string file;
+	for(uint i(0);i<reads.size();++i){
+		if(reads[i]==','){
+			file=reads.substr(last,i-last);
+			readFile.close();
+			readFile.open(file);
+			cout<<file<<endl;
+			unsigned char nbThreads(coreNumber);
+			vector<thread> threads;
+			for (size_t i(0); i<nbThreads; ++i){
+				if(greedy){
+					threads.push_back(thread(&Aligner::alignPartGreedy,this));
+				}else{
+					threads.push_back(thread(&Aligner::alignPartExhaustive,this));
+				}
+			}
+			for(auto &t : threads){t.join();}
+			last=i+1;
+		}
+	}
+	file=reads.substr(last);
+	readFile.close();
+	readFile.open(file);
+	cout<<file<<endl;
 	unsigned char nbThreads(coreNumber);
 	vector<thread> threads;
 	for (size_t i(0); i<nbThreads; ++i){
@@ -1360,8 +1385,8 @@ void Aligner::alignAll(bool greedy){
 			threads.push_back(thread(&Aligner::alignPartExhaustive,this));
 		}
 	}
-
 	for(auto &t : threads){t.join();}
+	
 	cout<<"Read : "<<readNumber<<endl;
 	cout<<"No Overlap : "<<noOverlapRead<<" Percent : "<<(100*float(noOverlapRead))/readNumber<<endl;
 	cout<<"Got Overlap : "<<alignedRead+notAligned<<" Percent : "<<(100*float(alignedRead+notAligned))/readNumber<<endl;

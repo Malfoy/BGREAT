@@ -58,10 +58,9 @@ public:
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory;
 
-	Aligner(const string& reads, const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial){
+	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
-		readFile.open(reads);
 		pathFile.open(paths);
 		noOverlapFile.open(noOverlaps);
 		notMappedFile.open(notMapped);
@@ -78,7 +77,7 @@ public:
 	}
 
 	void indexUnitigs();
-	void alignAll(bool);
+	void alignAll(bool, const string&);
 	void alignPartGreedy();
 	void alignPartExhaustive();
 	void indexUnitigsAux();
