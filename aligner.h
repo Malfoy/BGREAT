@@ -40,7 +40,7 @@ using namespace std;
 
 class Aligner{
 public:
-	bool partial;
+	bool partial,fastq;
 	ifstream unitigFile, readFile;
 	ofstream pathFile, noOverlapFile, notMappedFile;
 	atomic<size_t> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML,iter;
@@ -58,7 +58,7 @@ public:
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory;
 
-	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial){
+	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
 		pathFile.open(paths);
@@ -70,6 +70,7 @@ public:
 		tryNumber=2;
 		fullMemory=true;
 		partial=bpartial;
+		fastq=bfastq;
 		alignedRead=readNumber=noOverlapRead=notAligned=unitigNumber=overlaps=successMR=successMR2=sucessML=0;
 		offsetUpdate=1;
 		offsetUpdate<<=(2*(k-1));

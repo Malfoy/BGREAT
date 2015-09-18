@@ -63,9 +63,9 @@ int main(int argc, char ** argv){
 	int threads(2);
 	int ka(31);
 	int c;
-	bool brute(false),incomplete(false);
+	bool brute(false),incomplete(false),fastq(false);
 	
-	 while ((c = getopt (argc, argv, "r:k:g:m:t:p:o:a:bi")) != -1){
+	 while ((c = getopt (argc, argv, "r:k:g:m:t:p:o:a:biq")) != -1){
 	 	switch(c){
 	 		case 'r':
 	 			reads=optarg;
@@ -97,10 +97,13 @@ int main(int argc, char ** argv){
 	 		case 'i':
 	 			incomplete=(true);
 	 		break;
+	 		case 'q':
+	 			fastq=(true);
+	 		break;
 	 	}
 	 }
 	 if(reads!=""){
-               	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete);
+               	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete,fastq);
                	supervisor.indexUnitigs();
                	supervisor.alignAll(!brute,reads);
        	}else{

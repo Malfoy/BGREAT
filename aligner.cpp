@@ -80,32 +80,31 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 	reads={};
 	string read,header,inter;
 	char c;
-
-	for(uint i(0);i<n;++i){
+	if(fastq){
 		getline(readFile,header);
 		getline(readFile,read);
-	point:
-		c=readFile.peek();
-		if(c=='>'){
-			if(read.size()>2){
-				bool fail(false);
-				for(uint j(0);(j)<read.size();++j){
-					if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
-						fail=true;
-						break;
-					}
-				}
-				if(!fail){
-					reads.push_back({header,read});
+		if(read.size()>2){
+			bool fail(false);
+			for(uint j(0);(j)<read.size();++j){
+				if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
+					fail=true;
+					break;
 				}
 			}
-			read="";
-		}else{
-			if(!readFile.eof()){
-				getline(readFile,inter);
-				read+=inter;
-				goto point;
-			}else{
+			if(!fail){
+				reads.push_back({header,read});
+			}
+		}
+		getline(readFile,header);
+		getline(readFile,header);
+	}else{
+
+		for(uint i(0);i<n;++i){
+			getline(readFile,header);
+			getline(readFile,read);
+		point:
+			c=readFile.peek();
+			if(c=='>'){
 				if(read.size()>2){
 					bool fail(false);
 					for(uint j(0);(j)<read.size();++j){
@@ -118,7 +117,27 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 						reads.push_back({header,read});
 					}
 				}
-				return;
+				read="";
+			}else{
+				if(!readFile.eof()){
+					getline(readFile,inter);
+					read+=inter;
+					goto point;
+				}else{
+					if(read.size()>2){
+						bool fail(false);
+						for(uint j(0);(j)<read.size();++j){
+							if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
+								fail=true;
+								break;
+							}
+						}
+						if(!fail){
+							reads.push_back({header,read});
+						}
+					}
+					return;
+				}
 			}
 		}
 	}
