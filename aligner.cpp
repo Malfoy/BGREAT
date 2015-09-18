@@ -81,22 +81,25 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 	string read,header,inter;
 	char c;
 	if(fastq){
-		getline(readFile,header);
-		getline(readFile,read);
-		if(read.size()>2){
-			bool fail(false);
-			for(uint j(0);(j)<read.size();++j){
-				if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
-					fail=true;
-					break;
+		for(uint i(0);i<n;++i){
+			getline(readFile,header);
+			getline(readFile,read);
+			if(read.size()>2){
+				bool fail(false);
+				for(uint j(0);(j)<read.size();++j){
+					if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
+						fail=true;
+						break;
+					}
+				}
+				if(!fail){
+					reads.push_back({header,read});
 				}
 			}
-			if(!fail){
-				reads.push_back({header,read});
-			}
+			getline(readFile,header);
+			getline(readFile,header);
+			if(readFile.eof()){return;}
 		}
-		getline(readFile,header);
-		getline(readFile,header);
 	}else{
 
 		for(uint i(0);i<n;++i){
