@@ -13,7 +13,7 @@ Usage
 
 You can give multiple fasta file in input by separating the file names with a coma
 	
-	$./bgreat reads.fa,reads2.fa 4 unitig.dot
+	$./bgreat -r reads.fa,reads2.fa -k 4 -g unitig.dot
 
 If you use fastq files (with no splited line) use the -q option
 
@@ -70,7 +70,7 @@ Output
 ====
 You can try
 
-	$./bgreat reads.fa 4 unitig.dot
+	$./bgreat -r reads.fa -k 4 -g unitig.dot
 
 The Output file will look like something like this
 
