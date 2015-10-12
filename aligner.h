@@ -37,6 +37,14 @@ using namespace std;
 //using namespace google;
 
 #define uNumber int32_t
+#define kmer uint64_t
+//#define kmer __uint128_t
+
+uint64_t transform_to_size_t(__uint128_t n);
+
+namespace std { template <> struct hash<__uint128_t> { 
+	typedef __uint128_t argument_type; 
+	typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } }; }
 
 class Aligner{
 public:
@@ -47,10 +55,10 @@ public:
 	uint k;
 //	unordered_map<uint64_t,vector<uint32_t>> overlap2unitigs;
 //	unordered_map<uint,string> unitigCache;
-	unordered_map <uint64_t,vector<uint32_t>> right;
-	unordered_map <uint64_t,vector<uint32_t>> left;
+	unordered_map <kmer,vector<uint32_t>> right;
+	unordered_map <kmer,vector<uint32_t>> left;
 	vector<string> unitigs;
-	uint64_t offsetUpdate;
+	kmer offsetUpdate;
 	unsigned char coreNumber;
 	uint errorsMax,tryNumber;
 	mutex unitigMutex, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
@@ -82,45 +90,45 @@ public:
 	void alignPartGreedy();
 	void alignPartExhaustive();
 	void indexUnitigsAux();
-	vector<pair<uint64_t,uint>> getListOverlap(const string& read);
-	uint8_t checkEndExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
-	bool cover(const string& read, vector<pair<uint64_t,uint>>& listOverlap, size_t start, size_t end,vector<uNumber>& path);
-	bool cover2(const string& read, const vector<pair<uint64_t,uint>>& listOverlap, const size_t start, size_t end,vector<uNumber>& path);
-	size_t mapOnRightAll(const string &read, vector<uNumber>& path, pair<uint64_t, uint> overlap, const vector<pair<uint64_t,uint>>& listOverlap, bool& end, size_t start);
-	bool mapOnRightEndAll(const string &read, vector<uNumber>& path, pair<uint64_t, uint> overlap);
-	bool mapOnRightEndMax(const string &read, vector<uNumber>& path, pair<uint64_t, uint> overlap);
-	bool mapOnLeftEndAll(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap);
-	bool mapOnLeftEndFirst(const string &read, vector<uNumber>& path,const pair<uint64_t, uint>& overlap);
-	bool mapOnLeftEndMax(const string &read, vector<uNumber>& path, const  pair<uint64_t, uint>& overlap);
-	uint8_t mapOnLeftEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& , uint8_t errors);
-	uint8_t mapOnRightEndExhaustive(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& , uint8_t errors);
+	vector<pair<kmer,uint>> getListOverlap(const string& read);
+	uint8_t checkEndExhaustive(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	bool cover(const string& read, vector<pair<kmer,uint>>& listOverlap, size_t start, size_t end,vector<uNumber>& path);
+	bool cover2(const string& read, const vector<pair<kmer,uint>>& listOverlap, const size_t start, size_t end,vector<uNumber>& path);
+	size_t mapOnRightAll(const string &read, vector<uNumber>& path, pair<kmer, uint> overlap, const vector<pair<kmer,uint>>& listOverlap, bool& end, size_t start);
+	bool mapOnRightEndAll(const string &read, vector<uNumber>& path, pair<kmer, uint> overlap);
+	bool mapOnRightEndMax(const string &read, vector<uNumber>& path, pair<kmer, uint> overlap);
+	bool mapOnLeftEndAll(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap);
+	bool mapOnLeftEndFirst(const string &read, vector<uNumber>& path,const pair<kmer, uint>& overlap);
+	bool mapOnLeftEndMax(const string &read, vector<uNumber>& path, const  pair<kmer, uint>& overlap);
+	uint8_t mapOnLeftEndExhaustive(const string &read, vector<uNumber>& path, const pair<kmer, uint>& , uint8_t errors);
+	uint8_t mapOnRightEndExhaustive(const string &read, vector<uNumber>& path, const pair<kmer, uint>& , uint8_t errors);
 	string getUnitig(int position);
 	string getUnitigFile(uint position);
 	void getReads(vector<pair<string,string>>& reads, uint n);
 	vector<uNumber> alignReadGreedy(const string& read, bool& overlapFound, uint8_t errors,bool rc);
-	uint8_t checkBeginExhaustive(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
-	uint8_t checkPair(const pair<uint64_t, uint>& overlap1, const pair<uint64_t, uint>& overlap2, const string& read,uNumber& path,uint8_t errorsAllowed);
-	uint8_t coverGreedy(const string& read, const vector<pair<uint64_t,uint>>& listOverlap, const size_t start, size_t end, vector<uNumber>& path, uint8_t  errors, bool&);
-	pair<size_t,int> mapOnRight2(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap, const  vector<pair<uint64_t,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
-	uint8_t mapOnRightEndGreedy(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
-	uint8_t checkBeginGreedy(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
-	uint8_t mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
+	uint8_t checkBeginExhaustive(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t checkPair(const pair<kmer, uint>& overlap1, const pair<kmer, uint>& overlap2, const string& read,uNumber& path,uint8_t errorsAllowed);
+	uint8_t coverGreedy(const string& read, const vector<pair<kmer,uint>>& listOverlap, const size_t start, size_t end, vector<uNumber>& path, uint8_t  errors, bool&);
+	pair<size_t,int> mapOnRight2(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
+	uint8_t mapOnRightEndGreedy(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
+	uint8_t checkBeginGreedy(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
 	vector<uNumber> alignReadExhaustive(const string& read, bool& overlapFound, uint8_t errors);
-	uint8_t checkEndGreedy(const string& read, pair<uint64_t, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t checkEndGreedy(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
 	string readUnitig(uint position);
-	vector<pair<string,uNumber>> getBegin(uint64_t);
-	vector<pair<string,uNumber>> getEnd(uint64_t);
-	string num2str(uint64_t num);
-	uint64_t str2num(const string& str);
-	uint64_t getRepresentNum(const string& str);
+	vector<pair<string,uNumber>> getBegin(kmer);
+	vector<pair<string,uNumber>> getEnd(kmer);
+	string num2str(kmer num);
+	kmer str2num(const string& str);
+	kmer getRepresentNum(const string& str);
 	string recoverPath(vector<uNumber>& numbers,int size);
-	vector<uNumber> getBeginNumber(uint64_t bin);
-	vector<uNumber> getEndNumber(uint64_t bin);
-	void updateRC(uint64_t&	min, char nuc);
-	void update(uint64_t&	min, char nuc);
-	pair<size_t,uint8_t> mapOnRight(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap, const  vector<pair<uint64_t,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
-	uint8_t mapOnRightEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
-	uint8_t mapOnLeftEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<uint64_t, uint>& overlap , uint8_t errors);
+	vector<uNumber> getBeginNumber(kmer bin);
+	vector<uNumber> getEndNumber(kmer bin);
+	void updateRC(kmer&	min, char nuc);
+	void update(kmer&	min, char nuc);
+	pair<size_t,uint8_t> mapOnRight(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
+	uint8_t mapOnRightEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
+	uint8_t mapOnLeftEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
 
 };
 
