@@ -42,8 +42,8 @@ using namespace std;
 
 uint64_t transform_to_size_t(__uint128_t n);
 
-namespace std { template <> struct hash<__uint128_t> { 
-	typedef __uint128_t argument_type; 
+namespace std { template <> struct hash<__uint128_t> {
+	typedef __uint128_t argument_type;
 	typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } }; }
 
 class Aligner{
@@ -129,6 +129,11 @@ public:
 	pair<size_t,uint8_t> mapOnRight(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
 	uint8_t mapOnRightEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
 	uint8_t mapOnLeftEndExhaustivePartial(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
+	uint8_t coverGreedyPath(const string& read, const vector<pair<kmer,uint>>& listOverlap, const size_t start, size_t end, vector<uNumber>& path, uint8_t  errors, bool& ended);
+	uint8_t checkPairPaths(const pair<kmer, uint>& overlap1, const pair<kmer, uint>& overlap2, const string& read, uNumber& number, uint8_t errorsAllowed, const vector<uNumber> path);
+	vector<uNumber> alignReadGreedyPath(const string& read, bool& overlapFound, uint8_t errors, bool rc);
+	uint8_t checkBeginExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t checkEndExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
 
 };
 

@@ -64,7 +64,7 @@ int main(int argc, char ** argv){
 	int ka(31);
 	int c;
 	bool brute(false),incomplete(false),fastq(false);
-	
+
 	 while ((c = getopt (argc, argv, "r:k:g:m:t:p:o:a:biq")) != -1){
 	 	switch(c){
 	 		case 'r':
@@ -107,7 +107,14 @@ int main(int argc, char ** argv){
                	supervisor.indexUnitigs();
                	supervisor.alignAll(!brute,reads);
        	}else{
-              	cout<<"-r read_file -k k_value -g unitig_file -m n_missmatch -t n_thread -p path_file -o no_overlap_file -a not_aligned_file"<<endl;
+              	cout<<"-r read_file"<<endl
+              	<<"-k k_value"<<endl
+              	<<"-g unitig_file"<<endl
+              	<<"-m n_missmatch"<<endl
+              	<<"-t n_thread"<<endl
+              	<<"-p path_file"<<endl
+              	<<"-o no_overlap_file"<<endl
+              	<<"-a not_aligned_file"<<endl;
         }
 }
 /*
@@ -252,7 +259,7 @@ int main2(int argc, char ** argv){
 		}
 
 	}
-	
+
 	return 0;
 }
 */
