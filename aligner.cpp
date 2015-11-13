@@ -1607,7 +1607,7 @@ void Aligner::alignPartGreedy(){
 			overlapFound=false;
 			header=multiread[i].first;
 			read=multiread[i].second;
-			path=alignReadGreedyPath(read,overlapFound,errorsMax,false);
+			path=alignReadGreedy(read,overlapFound,errorsMax,false);
 			if(path.size()!=0){
 				pathMutex.lock();
 				{
