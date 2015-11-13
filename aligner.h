@@ -134,6 +134,7 @@ public:
 	vector<uNumber> alignReadGreedyPath(const string& read, bool& overlapFound, uint8_t errors, bool rc);
 	uint8_t checkBeginExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
 	uint8_t checkEndExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors);
+	pair<size_t,uint8_t> mapOnRightPath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
 
 };
 
