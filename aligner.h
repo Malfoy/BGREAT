@@ -48,7 +48,7 @@ namespace std { template <> struct hash<__uint128_t> {
 
 class Aligner{
 public:
-	bool partial,fastq;
+	bool partial,fastq,pathOption;
 	ifstream unitigFile, readFile;
 	ofstream pathFile, noOverlapFile, notMappedFile;
 	atomic<size_t> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML,iter;
@@ -66,7 +66,7 @@ public:
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory;
 
-	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq){
+	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
 		pathFile.open(paths);
@@ -83,6 +83,7 @@ public:
 		offsetUpdate=1;
 		offsetUpdate<<=(2*(k-1));
 		iter=1;
+		pathOption=bpath;
 	}
 
 	void indexUnitigs();
