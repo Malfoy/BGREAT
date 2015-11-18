@@ -1554,7 +1554,7 @@ void Aligner::alignPartExhaustive(){
 				}
 			}
 		}
-		if(iter++%100==0){
+		if(iter++%1000==0){
 			cout<<"Read : "<<readNumber<<endl;
 			cout<<"No Overlap : "<<noOverlapRead<<" Percent : "<<(100*float(noOverlapRead))/readNumber<<endl;
 			cout<<"Got Overlap : "<<alignedRead+notAligned<<" Percent : "<<(100*float(alignedRead+notAligned))/readNumber<<endl;
@@ -1599,19 +1599,21 @@ void Aligner::alignPartGreedy(){
 				if(!overlapFound){
 					noOverlapMutex.lock();
 					{
-						notMappedFile<<header<<endl<<read<<endl;
+						//~ notMappedFile<<header<<endl<<read<<endl;
+						notMappedFile<<read<<endl;
 					}
 					noOverlapMutex.unlock();
 				}else{
 					notMappedMutex.lock();
 					{
-						notMappedFile<<header<<endl<<read<<endl;
+						//~ notMappedFile<<header<<endl<<read<<endl;
+						notMappedFile<<read<<endl;
 					}
 					notMappedMutex.unlock();
 				}
 			}
 		}
-		if(iter++%100==0){
+		if(iter++%1000==0){
 			cout<<"Read : "<<readNumber<<endl;
 			cout<<"No Overlap : "<<noOverlapRead<<" Percent : "<<(100*float(noOverlapRead))/readNumber<<endl;
 			cout<<"Got Overlap : "<<alignedRead+notAligned<<" Percent : "<<(100*float(alignedRead+notAligned))/readNumber<<endl;
@@ -1713,6 +1715,7 @@ void Aligner::alignAll(bool greedy, const string& reads){
 	}
 	for(auto &t : threads){t.join();}
 
+	cout<<"Ended"<<endl;
 	cout<<"Read : "<<readNumber<<endl;
 	cout<<"No Overlap : "<<noOverlapRead<<" Percent : "<<(100*float(noOverlapRead))/readNumber<<endl;
 	cout<<"Got Overlap : "<<alignedRead+notAligned<<" Percent : "<<(100*float(alignedRead+notAligned))/readNumber<<endl;

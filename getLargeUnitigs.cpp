@@ -42,7 +42,7 @@ using namespace std;
 
 void getBigUnitigs(const string input, const string output, int length){
 	ifstream in(input.c_str(),ios::in);
-	ofstream out(output.c_str(),ios::out);
+	ofstream out(output.c_str(),ios::trunc);
 	string line;
 
 	out<<">N"<<endl;
@@ -55,6 +55,7 @@ void getBigUnitigs(const string input, const string output, int length){
 			out<<line;
 		}
 	}
+	out<<endl;
 }
 
 

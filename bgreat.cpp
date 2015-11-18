@@ -57,8 +57,8 @@ int main(int argc, char ** argv){
 	string reads;
 	string unitigs("unitig.dot");
 	string pathFile("paths");
-	string noOverlapFile("noOverlap");
-	string notAlignedFile("notAligned");
+	string noOverlapFile("noOverlap.fa");
+	string notAlignedFile("notAligned.fa");
 	int errors(2);
 	int threads(1);
 	int ka(31);
