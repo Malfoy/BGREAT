@@ -29,8 +29,6 @@
 #include <string>
 #include <iterator>
 #include <unordered_map>
-//#include <sparsehash/sparse_hash_map>
-//#include <sparsehash/dense_hash_map>
 #include <set>
 #include <algorithm>
 #include <chrono>
@@ -466,6 +464,35 @@ vector<uNumber> Aligner::alignReadExhaustive(const string& read, bool& overlapFo
 		if(errorBegin<=errors){
 			vector<uNumber> pathEnd;
 			uint8_t errorsEnd(checkEndExhaustive(read,listOverlap[start],pathEnd,errors-errorBegin));
+			if(errorsEnd+errorBegin<=errors){
+				alignedRead++;
+				readNumber++;
+				pathBegin.insert(pathBegin.end(), pathEnd.begin(),pathEnd.end());
+				return pathBegin;
+			}
+		}
+	}
+	notAligned++;
+	readNumber++;
+	return {};
+}
+
+vector<uNumber> Aligner::alignReadExhaustivePath(const string& read, bool& overlapFound, uint8_t errors){
+	vector<pair<kmer,uint>> listOverlap(getListOverlap(read));
+	if(listOverlap.empty()){
+		noOverlapRead++;
+		readNumber++;
+		return {};
+	}
+
+	overlaps+=listOverlap.size();
+	overlapFound=true;
+	for(uint start(0); start<listOverlap.size(); ++start){
+		vector<uNumber> pathBegin;
+		uint8_t errorBegin(checkBeginExhaustivePath(read,listOverlap[start],pathBegin,errors));
+		if(errorBegin<=errors){
+			vector<uNumber> pathEnd;
+			uint8_t errorsEnd(checkEndExhaustivePath(read,listOverlap[start],pathEnd,errors-errorBegin));
 			if(errorsEnd+errorBegin<=errors){
 				alignedRead++;
 				readNumber++;
@@ -1530,7 +1557,11 @@ void Aligner::alignPartExhaustive(){
 			header=multiread[i].first;
 			read=multiread[i].second;
 			overlapFound=false;
-			path=alignReadExhaustive(read,overlapFound,errorsMax);
+			if(pathOption){
+				path=alignReadExhaustivePath(read,overlapFound,errorsMax);
+			}else{
+				path=alignReadExhaustive(read,overlapFound,errorsMax);
+			}
 			if(path.size()!=0){
 				pathMutex.lock();
 				{

@@ -42,9 +42,9 @@ using namespace std;
 
 uint64_t transform_to_size_t(__uint128_t n);
 
-//~ namespace std { template <> struct hash<__uint128_t> {
-	//~ typedef __uint128_t argument_type;
-	//~ typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } }; }
+namespace std { template <> struct hash<__uint128_t> {
+	typedef __uint128_t argument_type;
+	typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } }; }
 
 class Aligner{
 public:
@@ -138,6 +138,7 @@ public:
 	pair<size_t,uint8_t> mapOnRightPath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors);
 	uint8_t mapOnLeftEndExhaustivePaths(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
 	uint8_t mapOnRightEndExhaustivePath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
+	vector<uNumber> alignReadExhaustivePath(const string& read, bool& overlapFound, uint8_t errors);
 
 };
 
