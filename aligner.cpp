@@ -105,7 +105,6 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 			if(readFile.eof()){return;}
 		}
 	}else{
-
 		for(uint i(0);i<n;++i){
 			getline(readFile,header);
 			getline(readFile,read);
@@ -215,7 +214,7 @@ kmer Aligner::str2num(const string& str){
 }
 
 
-char nuc2int(char c){
+kmer nuc2int(char c){
 	switch(c){
 		//~ case 'A': return 0;
 		case 'C': return 1;
@@ -229,7 +228,7 @@ char nuc2int(char c){
 }
 
 
-char nuc2intrc(char c){
+kmer nuc2intrc(char c){
 	switch(c){
 		case 'A': return 3;
 		case 'C': return 2;

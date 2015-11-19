@@ -42,9 +42,9 @@ using namespace std;
 
 uint64_t transform_to_size_t(__uint128_t n);
 
-namespace std { template <> struct hash<__uint128_t> {
-	typedef __uint128_t argument_type;
-	typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } }; }
+//~ namespace std { template <> struct hash<__uint128_t> {
+	//~ typedef __uint128_t argument_type;
+	//~ typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } }; }
 
 class Aligner{
 public:

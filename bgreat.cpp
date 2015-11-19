@@ -115,9 +115,9 @@ int main(int argc, char ** argv){
               	<<"-g unitig_file (unitig.dot)"<<endl
               	<<"-m n_missmatch (2)"<<endl
               	<<"-t n_thread (1)"<<endl
-              	<<"-p path_file (paths)"<<endl
-              	<<"-o no_overlap_file (noOverlap)"<<endl
-              	<<"-a not_aligned_file (notAligned)"<<endl
+              	<<"-f path_file (paths)"<<endl
+              	<<"-o no_overlap_file (noOverlap.fa)"<<endl
+              	<<"-a not_aligned_file (notAligned.fa)"<<endl
               	<<"-p to align on paths instead of walks"<<endl
               	<<"-q for fastq read file"<<endl;
         }
