@@ -1541,13 +1541,13 @@ void Aligner::alignPartExhaustive(){
 				if(!overlapFound){
 						noOverlapMutex.lock();
 						{
-							noOverlapFile<<header<<endl<<read<<endl;
+							notMappedFile<<read<<endl;
 						}
 						noOverlapMutex.unlock();
 				}else{
 					notMappedMutex.lock();
 					{
-						notMappedFile<<header<<endl<<read<<endl;
+						notMappedFile<<read<<endl;
 					}
 					notMappedMutex.unlock();
 				}
