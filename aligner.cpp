@@ -1570,15 +1570,17 @@ void Aligner::alignPartExhaustive(){
 				pathMutex.unlock();
 			}else{
 				if(!overlapFound){
-						noOverlapMutex.lock();
-						{
-							notMappedFile<<read<<endl;
-						}
-						noOverlapMutex.unlock();
+					noOverlapMutex.lock();
+					{
+						noOverlapFile<<header<<endl<<read<<endl;
+						//~ notMappedFile<<read<<endl;
+					}
+					noOverlapMutex.unlock();
 				}else{
 					notMappedMutex.lock();
 					{
-						notMappedFile<<read<<endl;
+						notMappedFile<<header<<endl<<read<<endl;
+						//~ notMappedFile<<read<<endl;
 					}
 					notMappedMutex.unlock();
 				}
@@ -1629,15 +1631,15 @@ void Aligner::alignPartGreedy(){
 				if(!overlapFound){
 					noOverlapMutex.lock();
 					{
-						//~ notMappedFile<<header<<endl<<read<<endl;
-						notMappedFile<<read<<endl;
+						noOverlapFile<<header<<endl<<read<<endl;
+						//~ notMappedFile<<read<<endl;
 					}
 					noOverlapMutex.unlock();
 				}else{
 					notMappedMutex.lock();
 					{
-						//~ notMappedFile<<header<<endl<<read<<endl;
-						notMappedFile<<read<<endl;
+						notMappedFile<<header<<endl<<read<<endl;
+						//~ notMappedFile<<read<<endl;
 					}
 					notMappedMutex.unlock();
 				}
