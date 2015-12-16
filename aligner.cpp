@@ -1534,7 +1534,7 @@ kmer rc(kmer min,uint n){
 vector<pair<kmer,uint>> Aligner::getListOverlap(const string& read){
 	vector<pair<kmer,uint>> listOverlap;
 	string overlap(read.substr(0,k-1));
-	kmer num(str2num(overlap)),rcnum(rc(num,k)), rep(min(num, rcnum));
+	kmer num(str2num(overlap)),rcnum(rc(num,k-1)), rep(min(num, rcnum));
 
 	for(uint i(0);;++i){
 		if(left.count(rep)!=0){
