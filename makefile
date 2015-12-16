@@ -1,3 +1,4 @@
+# CC=/usr/bin/g++
 CC=g++
 CFLAGS=  -Wall  -Ofast -std=c++11 -march=native -pthread
 LDFLAGS=-pthread
@@ -47,4 +48,3 @@ clean:
 
 
 rebuild: clean $(EXEC)
-

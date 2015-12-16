@@ -31,10 +31,10 @@
 #include <mutex>
 #include <unordered_map>
 
-//#include <sparsehash/sparse_hash_map>
+// #include <sparsehash/dense_hash_map>
 
 using namespace std;
-//using namespace google;
+// using namespace google;
 
 #define uNumber int32_t
 #define kmer uint64_t

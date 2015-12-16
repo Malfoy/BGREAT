@@ -1050,6 +1050,7 @@ string Aligner::getUnitig(int position){
 		}
 		return reverseComplement(unitigs[-position]);
 	}
+	cout<<"don't go here"<<endl;
 	string unitig;
 	unitigMutex.lock();
 	{
@@ -1517,10 +1518,23 @@ void Aligner::updateRC(kmer& min, char nuc){
 }
 
 
+kmer rc(kmer min,uint n){
+	kmer res(0);
+	kmer offset(1);
+	offset<<=(2*n-2);
+	for(uint i(0); i<n;++i){
+		res+=(3-(min%4))*offset;
+		min>>=2;
+		offset>>=2;
+	}
+	return res;
+}
+
+
 vector<pair<kmer,uint>> Aligner::getListOverlap(const string& read){
 	vector<pair<kmer,uint>> listOverlap;
 	string overlap(read.substr(0,k-1));
-	kmer num(str2num(overlap)),rcnum(str2num(reverseComplement(overlap))), rep(min(num, rcnum));
+	kmer num(str2num(overlap)),rcnum(rc(num,k)), rep(min(num, rcnum));
 
 	for(uint i(0);;++i){
 		if(left.count(rep)!=0){
@@ -1707,6 +1721,8 @@ void Aligner::indexUnitigs(){
 	for(auto &t : threads){t.join();}
 	cout<<"Number of unitig: "<<unitigNumber<<endl;
 }
+
+
 
 
 void Aligner::alignAll(bool greedy, const string& reads){
