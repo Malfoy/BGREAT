@@ -30,17 +30,13 @@
 #include <atomic>
 #include <mutex>
 #include <unordered_map>
+#include "utils.h"
 
 // #include <sparsehash/dense_hash_map>
 
 using namespace std;
 // using namespace google;
 
-#define uNumber int32_t
-#define kmer uint64_t
-//#define kmer __uint128_t
-
-uint64_t transform_to_size_t(__uint128_t n);
 
 namespace std { template <> struct hash<__uint128_t> {
 	typedef __uint128_t argument_type;
@@ -120,7 +116,6 @@ public:
 	vector<pair<string,uNumber>> getBegin(kmer);
 	vector<pair<string,uNumber>> getEnd(kmer);
 	string num2str(kmer num);
-	kmer str2num(const string& str);
 	kmer getRepresentNum(const string& str);
 	string recoverPath(vector<uNumber>& numbers,int size);
 	vector<uNumber> getBeginNumber(kmer bin);
@@ -139,6 +134,22 @@ public:
 	uint8_t mapOnLeftEndExhaustivePaths(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
 	uint8_t mapOnRightEndExhaustivePath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors);
 	vector<uNumber> alignReadExhaustivePath(const string& read, bool& overlapFound, uint8_t errors);
+	vector<overlapStruct> getListOverlapStuct(const string& read);
+	vector<uNumber> alignReadGreedyCache(const string& read, bool& overlapFound, uint8_t errors, bool rc);
+	uint8_t coverGreedyCache(const string& read, const vector<overlapStruct>& listOverlap, const size_t start, size_t end, vector<uNumber>& path, uint8_t  errors, bool& ended);
+	vector<overlapStruct> getListOverlapCache(const string& read);
+	uint8_t checkEndGreedyCache(const string& read, overlapStruct& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t checkBeginGreedyCache(const string& read, overlapStruct& overlap, vector<uNumber>& path, uint8_t errors);
+	uint8_t checkPairCache(const overlapStruct& overlap1, const overlapStruct& overlap2, const string& read, uNumber& number, uint8_t errorsAllowed);
+	pair<size_t,uint8_t> mapOnRightCache(const string &read, vector<uNumber>& path, const overlapStruct& overlap, const  vector<overlapStruct>& listOverlap, bool& ended,size_t start, uint8_t errors);
+	vector<pair<kmer,uint>> getNOverlap(const string& read, uint n);
+	vector<uNumber> alignReadExhaustiveR(const string& read, bool& overlapFound, uint8_t errors);
+	vector<uNumber> alignReadGreedyCover(const string& read, bool& overlapFound, uint8_t errors, bool rc);
+
+
+
+
+
 
 };
 

@@ -1,7 +1,8 @@
-# CC=/usr/bin/g++
-CC=g++
-CFLAGS=  -Wall  -Ofast -std=c++11 -march=native -pthread
-LDFLAGS=-pthread
+CC=/usr/bin/g++
+#CC=g++
+#CC=clang++
+CFLAGS=  -Wall  -Ofast -std=c++11 -march=native
+LDFLAGS=
 
 
 ifeq ($(gprof),1)
@@ -26,10 +27,13 @@ all: $(EXEC)
 getLargeUnitigs: getLargeUnitigs.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-aligner.o: aligner.cpp aligner.h
+aligner.o: aligner.cpp aligner.h utils.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
-bgreat: bgreat.o   aligner.o
+utils.o: utils.cpp utils.h
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+bgreat: bgreat.o   aligner.o utils.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 getBigUnitigs.o: getBigUnitigs.cpp

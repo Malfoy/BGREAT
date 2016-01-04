@@ -122,4 +122,3 @@ int main(int argc, char ** argv){
               	<<"-q for fastq read file"<<endl;
         }
 }
-
