@@ -410,7 +410,7 @@ vector<overlapStruct> Aligner::getListOverlapCache(const string& read){
 
 //TODO can be multithreaded with N hash table and a xorshift
 void Aligner::indexUnitigsAux(){
-	uint32_t position(0);
+	uint32_t position(0),count(0);
 	string line, overlap1, overlap2, waste;
 	uint64_t size;
 	unitigs.push_back("");
@@ -425,6 +425,7 @@ void Aligner::indexUnitigsAux(){
 		if(size<k){
 			break;
 		}else{
+			if(++count%100000==0){cout<<count/1000<<"k unitigs treated"<<endl;}
 			if(fullMemory){
 				unitigs.push_back(line);
 				position=unitigs.size()-1;
