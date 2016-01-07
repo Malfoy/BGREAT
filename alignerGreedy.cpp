@@ -716,6 +716,7 @@ void Aligner::alignPartGreedy(){
 				// 	}
 				pathMutex.lock();
 				{
+					pathFile<<header<<endl;
 					printPath(path,&pathFile);
 				}
 				pathMutex.unlock();
