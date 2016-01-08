@@ -84,7 +84,9 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 						}
 					}
 					if(!fail){
-						reads.push_back({header,read});
+						if(read.size()>k){
+							reads.push_back({header,read});
+						}
 					}
 				}
 				read="";
@@ -103,7 +105,9 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 							}
 						}
 						if(!fail){
-							reads.push_back({header,read});
+							if(read.size()>k){
+								reads.push_back({header,read});
+							}
 						}
 					}
 					return;
@@ -425,12 +429,13 @@ void Aligner::indexUnitigsAux(){
 		if(size<k){
 			break;
 		}else{
-			if(++count%100000==0){cout<<count/1000<<"k unitigs treated"<<endl;}
+			if(++count%1000000==0){cout<<count/1000<<"k unitigs treated"<<endl;}
 			if(fullMemory){
 				unitigs.push_back(line);
 				position=unitigs.size()-1;
 			}
-			unitigNumber++;
+			++unitigNumber;
+
 			kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
 			if(beg<=rcBeg){
 				left[(beg)].push_back(position);

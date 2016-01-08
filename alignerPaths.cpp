@@ -34,20 +34,20 @@
 #include <set>
 
 //PATH ALGORIGHMS
-vector<uNumber> Aligner::alignReadGreedyPath(const string& read, bool& overlapFound, uint8_t errors, bool rc){
+vector<uNumber> Aligner::alignReadGreedyPath(const string& read, bool& overlapFound, uint errors, bool rc){
 	vector<pair<kmer,uint>> listOverlap(getListOverlap(read));
 	if(listOverlap.empty()){++noOverlapRead;++readNumber;return {};}
 	overlaps+=listOverlap.size();
 	overlapFound=true;
 	for(uint start(0); start<=min(tryNumber-1,(uint)listOverlap.size()-1); ++start){
 		vector<uNumber> path;
-		uint8_t errorBegin(checkBeginExhaustivePath(read,listOverlap[start],path,errors));
+		uint errorBegin(checkBeginExhaustivePath(read,listOverlap[start],path,errors));
 		if(errorBegin<=errors){
 			for(int end((int)listOverlap.size()-1); end>=max((int)start,(int)listOverlap.size()-(int)tryNumber); --end){
-				uint8_t errorsEnd(checkEndExhaustivePath(read,listOverlap[end],path,errors-errorBegin));
+				uint errorsEnd(checkEndExhaustivePath(read,listOverlap[end],path,errors-errorBegin));
 				if(errorsEnd+errorBegin<=errors){
 					bool ended(false);
-					uint8_t errorCover(coverGreedyPath(read,listOverlap,start,end,path,errors-errorsEnd-errorBegin,ended));
+					uint errorCover(coverGreedyPath(read,listOverlap,start,end,path,errors-errorsEnd-errorBegin,ended));
 					if(errorCover<=errors-errorsEnd-errorBegin){
 						++alignedRead;
 						++readNumber;
@@ -65,17 +65,17 @@ vector<uNumber> Aligner::alignReadGreedyPath(const string& read, bool& overlapFo
 }
 
 
-vector<uNumber> Aligner::alignReadExhaustivePath(const string& read, bool& overlapFound, uint8_t errors){
+vector<uNumber> Aligner::alignReadExhaustivePath(const string& read, bool& overlapFound, uint errors){
 	vector<pair<kmer,uint>> listOverlap(getListOverlap(read));
 	if(listOverlap.empty()){++noOverlapRead;++readNumber;return {};}
 	overlaps+=listOverlap.size();
 	overlapFound=true;
 	for(uint start(0); start<listOverlap.size(); ++start){
 		vector<uNumber> pathBegin;
-		uint8_t errorBegin(checkBeginExhaustivePath(read,listOverlap[start],pathBegin,errors));
+		uint errorBegin(checkBeginExhaustivePath(read,listOverlap[start],pathBegin,errors));
 		if(errorBegin<=errors){
 			vector<uNumber> pathEnd;
-			uint8_t errorsEnd(checkEndExhaustivePath(read,listOverlap[start],pathEnd,errors-errorBegin));
+			uint errorsEnd(checkEndExhaustivePath(read,listOverlap[start],pathEnd,errors-errorBegin));
 			if(errorsEnd+errorBegin<=errors){
 				alignedRead++;
 				readNumber++;
@@ -90,15 +90,15 @@ vector<uNumber> Aligner::alignReadExhaustivePath(const string& read, bool& overl
 }
 
 
-uint8_t Aligner::coverGreedyPath(const string& read, const vector<pair<kmer,uint>>& listOverlap, const size_t start, size_t end, vector<uNumber>& path, uint8_t  errors, bool& ended){
+uint Aligner::coverGreedyPath(const string& read, const vector<pair<kmer,uint>>& listOverlap, const uint start, uint end, vector<uNumber>& path, uint  errors, bool& ended){
 	if(start==end){return 0;}
 	int indice(0);
-	uint8_t minMissmatch(errors+1);
+	uint minMissmatch(errors+1);
 	uNumber number2keep;
 
-	for(size_t i(1); i+start<=end and i<=tryNumber; ++i){
+	for(uint i(1); i+start<=end and i<=tryNumber; ++i){
 		uNumber number(0);
-		uint8_t missmatch(checkPairPaths(listOverlap[start], listOverlap[i+start], read, number,errors,path));
+		uint missmatch(checkPairPaths(listOverlap[start], listOverlap[i+start], read, number,errors,path));
 		if(missmatch<minMissmatch){
 			indice=i;
 			number2keep=number;
@@ -117,7 +117,7 @@ uint8_t Aligner::coverGreedyPath(const string& read, const vector<pair<kmer,uint
 			return pair.second;
 		}
 		if(pair.first>start){
-			uint8_t errorrecur(coverGreedyPath(read, listOverlap, pair.first, end, path,errors-pair.second,ended));
+			uint errorrecur(coverGreedyPath(read, listOverlap, pair.first, end, path,errors-pair.second,ended));
 			if(errorrecur+pair.second<=errors){
 				successMR2++;
 				return errorrecur+pair.second;
@@ -128,12 +128,12 @@ uint8_t Aligner::coverGreedyPath(const string& read, const vector<pair<kmer,uint
 }
 
 
-uint8_t Aligner::mapOnRightEndExhaustivePath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors){
+uint Aligner::mapOnRightEndExhaustivePath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint errors){
 	string unitig,readLeft(read.substr(overlap.second+k-1));
 	vector<uNumber> path2keep;
 	if(readLeft.empty()){path.push_back(0);return 0;}
 	auto rangeUnitigs(getBegin(overlap.first));
-	uint8_t miniMiss(errors+1), miniMissIndice(9);
+	uint miniMiss(errors+1), miniMissIndice(9);
 	bool ended(false);
 
 	for(uint i(0); i<rangeUnitigs.size(); ++i){
@@ -142,7 +142,7 @@ uint8_t Aligner::mapOnRightEndExhaustivePath(const string &read, vector<uNumber>
 			unitig=(rangeUnitigs[i].first);
 			//case the rest of the read is too small
 			if(readLeft.size()<= unitig.size()-k+1){
-				uint8_t miss(missmatchNumber(unitig.substr(k-1,readLeft.size()), readLeft, errors));
+				uint miss(missmatchNumber(unitig.substr(k-1,readLeft.size()), readLeft, errors));
 				if(miss<miniMiss){
 					miniMiss=miss;
 					miniMissIndice=i;
@@ -150,7 +150,7 @@ uint8_t Aligner::mapOnRightEndExhaustivePath(const string &read, vector<uNumber>
 				}
 			}else{
 				//case the read is big enough we want to recover a true overlap
-				uint8_t miss(missmatchNumber(unitig.substr(k-1), readLeft.substr(0,unitig.size()-k+1), errors));
+				uint miss(missmatchNumber(unitig.substr(k-1), readLeft.substr(0,unitig.size()-k+1), errors));
 				if(miss<miniMiss){
 					kmer overlapNum(str2num(unitig.substr(unitig.size()-k+1,k-1)));
 					vector<uNumber> possiblePath;
@@ -180,12 +180,12 @@ uint8_t Aligner::mapOnRightEndExhaustivePath(const string &read, vector<uNumber>
 }
 
 
-pair<size_t,uint8_t> Aligner::mapOnRightPath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,size_t start, uint8_t errors){
+pair<uint,uint> Aligner::mapOnRightPath(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,uint start, uint errors){
 	string unitig, readLeft(read.substr(overlap.second+k-1)),nextUnitig;
 	if(readLeft.empty()){cout<<"should not appears"<<endl;exit(0);return {start,0};}
 	auto rangeUnitigs(getBegin(overlap.first));
-	uint8_t miniMiss(errors+1),miniMissIndice(9);
-	size_t next(start);
+	uint miniMiss(errors+1),miniMissIndice(9);
+	uint next(start);
 	kmer nextOverlapNum(0);
 
 	for(uint i(0); i<rangeUnitigs.size(); ++i){
@@ -194,7 +194,7 @@ pair<size_t,uint8_t> Aligner::mapOnRightPath(const string &read, vector<uNumber>
 			unitig=(rangeUnitigs[i].first);
 			//case the rest of the read is too small
 			if(readLeft.size() <= unitig.size()-k+1){
-				uint8_t miss(missmatchNumber(unitig.substr(k-1,readLeft.size()), readLeft, errors));
+				uint miss(missmatchNumber(unitig.substr(k-1,readLeft.size()), readLeft, errors));
 				if(miss<miniMiss){
 					ended=true;
 					miniMiss=miss;
@@ -202,7 +202,7 @@ pair<size_t,uint8_t> Aligner::mapOnRightPath(const string &read, vector<uNumber>
 				}
 			}else{
 				//case the read is big enough we want to recover a true overlap
-				uint8_t miss(missmatchNumber(unitig.substr(k-1), readLeft.substr(0,unitig.size()-k+1), errors));
+				uint miss(missmatchNumber(unitig.substr(k-1), readLeft.substr(0,unitig.size()-k+1), errors));
 				if(miss<miniMiss){
 					kmer overlapNum(str2num(unitig.substr(unitig.size()-k+1,k-1)));
 					if(miss<miniMiss){
@@ -239,7 +239,7 @@ pair<size_t,uint8_t> Aligner::mapOnRightPath(const string &read, vector<uNumber>
 }
 
 
-uint8_t Aligner::checkPairPaths(const pair<kmer, uint>& overlap1, const pair<kmer, uint>& overlap2, const string& read, uNumber& number, uint8_t errorsAllowed, const vector<uNumber> path){
+uint Aligner::checkPairPaths(const pair<kmer, uint>& overlap1, const pair<kmer, uint>& overlap2, const string& read, uNumber& number, uint errorsAllowed, const vector<uNumber> path){
 	if(overlap2.second-overlap1.second<k){
 		int32_t positionget1, positionget2;
 		auto rangeUnitigs1(getBegin(overlap1.first));
@@ -262,7 +262,7 @@ uint8_t Aligner::checkPairPaths(const pair<kmer, uint>& overlap1, const pair<kme
 	string unitig,subRead(read.substr(overlap1.second+k-1,overlap2.second-overlap1.second-(k-1)));
 	auto rangeUnitigs1(getBegin(overlap1.first));
 	auto rangeUnitigs2(getEnd(overlap2.first));
-	uint8_t minMissMatch(errorsAllowed+1),indice(0);
+	uint minMissMatch(errorsAllowed+1),indice(0);
 	int32_t positionget1, positionget2;
 	for(uint i(0); i<rangeUnitigs1.size(); ++i){
 		positionget1=rangeUnitigs1[i].second;
@@ -273,7 +273,7 @@ uint8_t Aligner::checkPairPaths(const pair<kmer, uint>& overlap1, const pair<kme
 				if(it==path.end()){
 					unitig=getUnitig(rangeUnitigs1[i].second);
 					if(unitig.size()-2*(k-1)==subRead.size()){
-						uint8_t missmatch(missmatchNumber(unitig.substr(k-1,subRead.size()), subRead, errorsAllowed));
+						uint missmatch(missmatchNumber(unitig.substr(k-1,subRead.size()), subRead, errorsAllowed));
 						if(missmatch<minMissMatch){
 							minMissMatch=missmatch;
 							indice=i;
@@ -291,7 +291,7 @@ uint8_t Aligner::checkPairPaths(const pair<kmer, uint>& overlap1, const pair<kme
 }
 
 
-uint8_t Aligner::checkEndExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors){
+uint Aligner::checkEndExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors){
 	string readLeft(read.substr(overlap.second+k-1)),unitig;
 	vector<uNumber> path2keep;
 	if(readLeft.empty()){
@@ -299,7 +299,7 @@ uint8_t Aligner::checkEndExhaustivePath(const string& read, pair<kmer, uint>& ov
 		return 0;
 	}
 	auto rangeUnitigs(getBegin(overlap.first));
-	uint8_t minMiss(errors+1),indiceMinMiss(9);
+	uint minMiss(errors+1),indiceMinMiss(9);
 	bool ended(false);
 	int offset(-2);
 	if(partial & rangeUnitigs.empty()){
@@ -313,7 +313,7 @@ uint8_t Aligner::checkEndExhaustivePath(const string& read, pair<kmer, uint>& ov
 		if(it==path.end()){
 			unitig=(rangeUnitigs[i].first);
 			if(unitig.size()-k+1>=readLeft.size()){
-				uint8_t miss(missmatchNumber(unitig.substr(k-1,readLeft.size()),readLeft, errors));
+				uint miss(missmatchNumber(unitig.substr(k-1,readLeft.size()),readLeft, errors));
 				if(miss<minMiss){
 					minMiss=miss;
 					indiceMinMiss=i;
@@ -321,7 +321,7 @@ uint8_t Aligner::checkEndExhaustivePath(const string& read, pair<kmer, uint>& ov
 					offset=readLeft.size()+k-1;
 				}
 			}else{
-				uint8_t miss(missmatchNumber(unitig.substr(k-1),readLeft.substr(0,unitig.size()-k+1), errors));
+				uint miss(missmatchNumber(unitig.substr(k-1),readLeft.substr(0,unitig.size()-k+1), errors));
 				if(miss<minMiss){
 					kmer overlapNum(str2num(unitig.substr(unitig.size()-k+1,k-1)));
 					vector<uNumber> possiblePath;
@@ -353,14 +353,14 @@ uint8_t Aligner::checkEndExhaustivePath(const string& read, pair<kmer, uint>& ov
 }
 
 
-uint8_t Aligner::checkBeginExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint8_t errors){
+uint Aligner::checkBeginExhaustivePath(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors){
 	if(overlap.second==0){
 		path.push_back(0);
 		return 0;
 	}
 	string readLeft(read.substr(0,overlap.second)),unitig;
 	auto rangeUnitigs(getEnd(overlap.first));
-	uint8_t minMiss(errors+1),indiceMinMiss(0);
+	uint minMiss(errors+1),indiceMinMiss(0);
 	int offset(-2);
 	bool ended(false);
 	vector<uNumber> path2keep;
@@ -376,7 +376,7 @@ uint8_t Aligner::checkBeginExhaustivePath(const string& read, pair<kmer, uint>& 
 		if(it==path.end()){
 			unitig=(rangeUnitigs[i].first);
 			if(unitig.size()-k+1>=readLeft.size()){
-				uint8_t miss(missmatchNumber(unitig.substr(unitig.size()-readLeft.size()-k+1,readLeft.size()),readLeft, errors));
+				uint miss(missmatchNumber(unitig.substr(unitig.size()-readLeft.size()-k+1,readLeft.size()),readLeft, errors));
 				if(miss<minMiss){
 					minMiss=miss;
 					indiceMinMiss=i;
@@ -384,7 +384,7 @@ uint8_t Aligner::checkBeginExhaustivePath(const string& read, pair<kmer, uint>& 
 					offset=(unitig.size()-readLeft.size()-k+1);
 				}
 			}else{
-				uint8_t miss(missmatchNumber(unitig.substr(0,unitig.size()-k+1), readLeft.substr(readLeft.size()+k-1-unitig.size()), errors));
+				uint miss(missmatchNumber(unitig.substr(0,unitig.size()-k+1), readLeft.substr(readLeft.size()+k-1-unitig.size()), errors));
 				if(miss<minMiss){
 					kmer overlapNum(str2num(unitig.substr(0,k-1)));
 					vector<uNumber> possiblePath;
@@ -417,12 +417,12 @@ uint8_t Aligner::checkBeginExhaustivePath(const string& read, pair<kmer, uint>& 
 }
 
 
-uint8_t Aligner::mapOnLeftEndExhaustivePaths(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint8_t errors){
+uint Aligner::mapOnLeftEndExhaustivePaths(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint errors){
 	string unitig, readLeft(read.substr(0,overlap.second));
 	vector<uNumber> path2keep;
 	if(readLeft.size()==0){return 0;}
 	auto rangeUnitigs(getEnd(overlap.first));
-	uint8_t miniMiss(errors+1),miniMissIndice(9);
+	uint miniMiss(errors+1),miniMissIndice(9);
 	int offset(-2);
 	bool ended(false);
 
@@ -430,7 +430,7 @@ uint8_t Aligner::mapOnLeftEndExhaustivePaths(const string &read, vector<uNumber>
 		unitig=(rangeUnitigs[i].first);
 		//case the rest of the read is too small
 		if(readLeft.size()+k-1 <= unitig.size()){
-			uint8_t miss(missmatchNumber(unitig.substr(unitig.size()-readLeft.size()-k+1,readLeft.size()), readLeft, errors));
+			uint miss(missmatchNumber(unitig.substr(unitig.size()-readLeft.size()-k+1,readLeft.size()), readLeft, errors));
 			if(miss<miniMiss){
 				miniMiss=miss;
 				miniMissIndice=i;
@@ -439,7 +439,7 @@ uint8_t Aligner::mapOnLeftEndExhaustivePaths(const string &read, vector<uNumber>
 			}
 		}else{
 			//case the read is big enough we want to recover a true overlap
-			uint8_t miss(missmatchNumber(unitig.substr(0,unitig.size()-k+1), readLeft.substr(readLeft.size()-(unitig.size()-k+1)), errors));
+			uint miss(missmatchNumber(unitig.substr(0,unitig.size()-k+1), readLeft.substr(readLeft.size()-(unitig.size()-k+1)), errors));
 			if(miss<miniMiss){
 				kmer overlapNum(str2num(unitig.substr(0,k-1)));
 				vector<uNumber> possiblePath;
