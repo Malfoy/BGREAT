@@ -55,7 +55,7 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 			if(read.size()>2){
 				bool fail(false);
 				for(uint j(0);(j)<read.size();++j){
-					if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
+					if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G' and read[j]!='N'){
 						fail=true;
 						break;
 					}
@@ -78,7 +78,7 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 				if(read.size()>2){
 					bool fail(false);
 					for(uint j(0);(j)<read.size();++j){
-						if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
+						if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G' and read[j]!='N'){
 							fail=true;
 							break;
 						}
@@ -99,7 +99,7 @@ void Aligner::getReads(vector<pair<string,string>>& reads, uint n){
 					if(read.size()>2){
 						bool fail(false);
 						for(uint j(0);(j)<read.size();++j){
-							if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G'){
+							if(read[j]!='A' and read[j]!='C' and read[j]!='T' and read[j]!='G' and read[j]!='N'){
 								fail=true;
 								break;
 							}
