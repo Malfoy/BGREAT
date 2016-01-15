@@ -55,7 +55,7 @@ using namespace std;
 
 int main(int argc, char ** argv){
 	string reads;
-	string unitigs("unitig.dot");
+	string unitigs("unitig.fa");
 	string pathFile("paths");
 	string noOverlapFile("noOverlap.fa");
 	string notAlignedFile("notAligned.fa");

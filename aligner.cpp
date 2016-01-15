@@ -422,14 +422,15 @@ void Aligner::indexUnitigsAux(){
 		if(!fullMemory){
 			position=unitigFile.tellg();
 		}
-		getline(unitigFile,line,';');
-		unitigFile.seekg(1, ios::cur);
-		transform(line.begin(), line.end(), line.begin(), ::toupper);
+		getline(unitigFile,line);
+		getline(unitigFile,line);
+		// unitigFile.seekg(1, ios::cur);
+		// transform(line.begin(), line.end(), line.begin(), ::toupper);
 		size=line.size();
 		if(size<k){
 			break;
 		}else{
-			if(++count%1000000==0){cout<<count/1000<<"k unitigs treated"<<endl;}
+			if(++count%1000000==0){cout<<count/1000000<<"M unitigs treated"<<endl;}
 			if(fullMemory){
 				unitigs.push_back(line);
 				position=unitigs.size()-1;
