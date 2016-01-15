@@ -13,7 +13,7 @@ Usage
 
 You can give multiple fasta file in input by separating the file names with a coma
 	
-	$./bgreat -r reads.fa,reads2.fa -k 4 -g unitig.dot
+	$./bgreat -r reads.fa,reads2.fa -k 4 -g unitig.fa
 
 If you use fastq files (with no splited line) use the -q option
 
@@ -25,7 +25,7 @@ The k value of your De Bruijn graph
  
 
 The file containing your unitigs
-"unitig_file": unitig.dot
+"unitig_file": unitig.fa
  
 
 The number of missmatches allowed in the alignment
@@ -48,29 +48,22 @@ The outputfile with read that have an overlap but could not be mapped by BGREAT
 "not_aligned_file": notAligned.fa
 
 
-Workflow
+Graph computation
 ====
 
 
-We propose the following workflow to compute unitigs from a set of reads:
+We propose the following method to compute the unitigs from a set of reads:
 
+Unitig computation with BCALM2 (see https://github.com/GATB/bcalm) :
 
-Kmer counting with DSK (see http://minia.genouest.org/dsk/) :
-
-	$dsk -file reads.fasta -kmer-size k -abundance-min c -out reads
-
-	$dsk2ascii -file reads.h5 -out kmers
-
-
-Unitig computation with BCALM (see https://github.com/Malfoy/bcalm) :
-
-	$bcalm kmers unitigs.dot 6
+	&./bcalm -in reads.fa -k 31 -abundance 3
+	&./bglue -in unitigs.h5 -k 21
 
 Output
 ====
 You can try
 
-	$./bgreat -r reads.fa -k 4 -g unitig.dot
+	$./bgreat -r reads.fa -k 4 -g unitig.fa
 
 The Output file will look like something like this
 
@@ -92,4 +85,3 @@ Experimental option (in developpement)
 ====
 -b for bruteforce exploration (way slower but a bit more precise)
 
--i to allow partial mapping (experimental)
