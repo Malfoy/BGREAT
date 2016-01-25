@@ -24,7 +24,7 @@
 
 
 #define uNumber int32_t
-//#define kmer uint64_t
+// #define kmer uint64_t
 #define kmer __uint128_t
 
 

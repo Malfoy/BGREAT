@@ -35,7 +35,7 @@
 
 
 uint64_t transform_to_size_t(__uint128_t n){
-	return n>>64;
+	return (uint64_t)n;
 }
 
 

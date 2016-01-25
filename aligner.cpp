@@ -344,18 +344,16 @@ vector<pair<kmer,uint>> Aligner::getListOverlap(const string& read){
 
 vector<pair<kmer,uint>> Aligner::getNOverlap(const string& read, uint n){
 	vector<pair<kmer,uint>> listOverlap;
-	string overlap(read.substr(0,k-1));
-	kmer num(str2num(overlap)),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
-
+	kmer num(str2num(read.substr(0,k-1))),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
 	for(uint i(0);;++i){
-		if(left.count(rep)!=0){
+		if(left.unordered_map::count(rep)!=0){
 			listOverlap.push_back({num,i});
 		}else{
-			if(right.count(rep)!=0){
+			if(right.unordered_map::count(rep)!=0){
 				listOverlap.push_back({num,i});
 			}
 		}
-		if(listOverlap.size()==n){
+		if(listOverlap.size()>=n){
 			return listOverlap;
 		}
 		if(i+k-1<read.size()){
@@ -433,6 +431,7 @@ void Aligner::indexUnitigsAux(){
 			if(++count%1000000==0){cout<<count/1000000<<"M unitigs treated"<<endl;}
 			if(fullMemory){
 				unitigs.push_back(line);
+				// cout<<line<<endl;
 				position=unitigs.size()-1;
 			}
 			++unitigNumber;
@@ -511,6 +510,5 @@ void Aligner::alignAll(bool greedy, const string& reads){
 	cout<<"Overlap but no aligne: "<<notAligned<<" Percent : "<<(100*float(notAligned))/(alignedRead+notAligned)<<endl;
 	auto end=chrono::system_clock::now();auto waitedFor=end-startChrono;
 	cout<<"Reads/seconds : "<<readNumber/(chrono::duration_cast<chrono::seconds>(waitedFor).count()+1)<<endl;
-	cout<<"Overlap per reads : "<<(overlaps)/(alignedRead+notAligned)<<endl;
 	cout<<endl;
 }
