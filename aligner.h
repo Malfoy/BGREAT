@@ -60,9 +60,9 @@ public:
 	mutex unitigMutex, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
 	string unitigFileName;
 	chrono::system_clock::time_point startChrono;
-	bool fullMemory;
+	bool fullMemory,correctionMode;
 
-	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath){
+	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
 		pathFile.open(paths);
@@ -73,6 +73,7 @@ public:
 		errorsMax=errorsAllowed;
 		tryNumber=2;
 		fullMemory=true;
+		correctionMode=bcorrectionMode;
 		partial=bpartial;
 		fastq=bfastq;
 		alignedRead=readNumber=noOverlapRead=notAligned=unitigNumber=overlaps=successMR=successMR2=sucessML=0;
@@ -117,7 +118,7 @@ public:
 	vector<pair<string,uNumber>> getEnd(kmer);
 	string num2str(kmer num);
 	kmer getRepresentNum(const string& str);
-	string recoverPath(vector<uNumber>& numbers,int size);
+	string recoverPath(vector<uNumber>& numbers,uint size);
 	vector<uNumber> getBeginNumber(kmer bin);
 	vector<uNumber> getEndNumber(kmer bin);
 	void updateRC(kmer&	min, char nuc);

@@ -36,8 +36,6 @@
 #include <string>
 #include <iterator>
 #include <unordered_map>
-//#include <sparsehash/sparse_hash_map>
-//#include <sparsehash/dense_hash_map>
 #include <set>
 #include <algorithm>
 #include <chrono>
@@ -63,50 +61,50 @@ int main(int argc, char ** argv){
 	int threads(1);
 	int ka(31);
 	int c;
-	bool brute(false),incomplete(false),fastq(false),pathOption(false);
-
-	 while ((c = getopt (argc, argv, "r:k:g:m:t:f:o:a:biqp")) != -1){
-	 	switch(c){
-	 		case 'r':
-	 			reads=optarg;
-	 		break;
-	 		case 'k':
-	 			ka=stoi(optarg);
-	 		break;
-	 		case 'g':
-	 			unitigs=(optarg);
-	 		break;
-	 		case 'm':
-	 			errors=stoi(optarg);
-	 		break;
-	 		case 't':
-	 			threads=stoi(optarg);
-	 		break;
-	 		case 'f':
-	 			pathFile=(optarg);
-	 		break;
-	 		case 'o':
-	 			noOverlapFile=(optarg);
-	 		break;
-	 		case 'a':
-	 			notAlignedFile=(optarg);
-	 		break;
-	 		case 'b':
-	 			brute=(true);
-	 		break;
-	 		case 'i':
-	 			incomplete=(true);
-	 		break;
-	 		case 'q':
-	 			fastq=(true);
-	 		break;
-	 		case 'p':
-	 			pathOption=(true);
-	 		break;
-	 	}
-	 }
+	bool brute(false),incomplete(false),fastq(false),pathOption(false),correctionMode(false);
+	while ((c = getopt (argc, argv, "r:k:g:m:t:f:o:a:biqpc")) != -1){
+	switch(c){
+		case 'r':
+			reads=optarg;
+			break;
+			case 'k':
+				ka=stoi(optarg);
+			break;
+			case 'g':
+				unitigs=(optarg);
+			break;
+			case 'm':
+				errors=stoi(optarg);
+			break;
+			case 't':
+				threads=stoi(optarg);
+			break;
+			case 'f':
+				pathFile=(optarg);
+			break;
+			case 'o':
+				noOverlapFile=(optarg);
+			break;
+			case 'a':
+				notAlignedFile=(optarg);
+			break;
+			case 'b':
+				brute=(true);
+			break;
+			case 'i':
+				incomplete=(true);
+			break;
+			case 'q':
+				fastq=(true);
+			break;
+			case 'c':
+				correctionMode=true;
+				pathFile="corrected.fa";
+			break;
+		}
+	}
 	 if(reads!=""){
-               	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption);
+               	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode);
                	supervisor.indexUnitigs();
                	supervisor.alignAll(!brute,reads);
        	}else{
