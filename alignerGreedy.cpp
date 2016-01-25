@@ -286,13 +286,9 @@ uint Aligner::mapOnRightEndGreedy(const string &read, vector<uNumber>& path, con
 			}
 		}
 	}
-	if(miniMiss<errors){
+	if(miniMiss<=errors){
 		path.push_back(rangeUnitigs[miniMissIndice].second);
-		if (ended){
-			// path.push_back(offset);
-			// path.push_back(rangeUnitigs[miniMissIndice].second);
-			return miniMiss;
-		}
+		if (ended){return miniMiss;}
 		miniMiss+=mapOnRightEndGreedy(read , path, {nextOverlap,overlap.second+(nextUnitig.size()-k+1)}, errors-miniMiss);
 	}
 	return miniMiss;
@@ -537,7 +533,7 @@ uint Aligner::checkBeginGreedy(const string& read, pair<kmer, uint>& overlap, ve
 		minMiss+=mapOnLeftEndGreedy(read, path, {nextOverlap,overlap.second-(rangeUnitigs[indiceMinMiss].first.size()-k+1)},errors-minMiss);
 		if(minMiss<=errors){
 			path.push_back(rangeUnitigs[indiceMinMiss].second);
-			sucessML++;
+			++sucessML;
 		}
 	}
 	return minMiss;
@@ -595,7 +591,7 @@ uint Aligner::checkBeginGreedyCache(const string& read, overlapStruct& overlap, 
 
 uint Aligner::checkEndGreedy(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors){
 	string readLeft(read.substr(overlap.second+k-1)),unitig,nextUnitig;
-	if(readLeft.size()<=k-1){return 0;}
+	// if(readLeft.size()<=k-1){return 0;}
 	auto rangeUnitigs(getBegin(overlap.first));
 	uint minMiss(errors+1),indiceMinMiss(9);
 	bool ended(false);
@@ -619,20 +615,18 @@ uint Aligner::checkEndGreedy(const string& read, pair<kmer, uint>& overlap, vect
 					indiceMinMiss=i;
 					nextOverlap=overlapNum;
 					nextUnitig=unitig;
+					// ended=false;
 				}
 			}
 		}
 	}
 
 	if(minMiss<=errors){
+		// cout<<"hey"<<endl;
 		path.push_back(rangeUnitigs[indiceMinMiss].second);
-		if(ended){
-			return minMiss;
-		}
+		if(ended){return minMiss;}
 		minMiss+=mapOnRightEndGreedy(read, path, {nextOverlap,overlap.second+(nextUnitig.size()-k+1)},errors-minMiss);
-		if(minMiss<=errors){
-			successMR++;
-		}
+		if(minMiss<=errors){++successMR;}
 	}
 	return minMiss;
 }
@@ -703,17 +697,16 @@ void Aligner::alignPartGreedy(){
 				path=alignReadGreedy(read,overlapFound,errorsMax,false);
 			}
 			if(path.size()!=0){
-				// string lol(recoverPath(path,2*read.size()));
-				// 	if(lol!=read){
-				// 		lol=reverseComplements(lol);
-				// 		if(lol!=read){
-				// 			cin.get();
-				// 		}
-				// 	}
 				pathMutex.lock();
 				{
-					pathFile<<header<<endl;
-					printPath(path,&pathFile);
+					if(correctionMode){
+						string corrected(recoverPath(path,read.size()));
+						pathFile<<header<<endl;
+						pathFile<<corrected<<endl;
+					}else{
+						pathFile<<header<<endl;
+						printPath(path,&pathFile);
+					}
 				}
 				pathMutex.unlock();
 			}else{
