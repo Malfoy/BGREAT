@@ -24,8 +24,8 @@
 
 
 #define uNumber int32_t
-// #define kmer uint64_t
-#define kmer __uint128_t
+#define kmer uint64_t
+// #define kmer __uint128_t
 
 
 using namespace std;
@@ -39,7 +39,10 @@ struct overlapStruct{
 };
 
 
-uint64_t transform_to_size_t(__uint128_t n);
+static char char2int[85];
+
+
+uint64_t transform_to_size_t(__uint128_t& n);
 void printPath(const vector<int32_t>& path, ofstream* file);
 char revCompChar(char s);
 char randNuc();
@@ -51,6 +54,9 @@ uint8_t missmatchNumber(const string& seq1, const string& seq2, unsigned int n);
 string compactionEnd(const string& seq1,const string& seq2, uint k);
 kmer rcb(kmer min,uint n);
 string reverseComplements(const string& s);
+void initRc();
+
+
 
 
 #endif /* defined(__UTILS__) */

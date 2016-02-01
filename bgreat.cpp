@@ -52,6 +52,7 @@
 using namespace std;
 
 int main(int argc, char ** argv){
+	// initRc();
 	string reads;
 	string unitigs("unitig.fa");
 	string pathFile("paths");
@@ -106,6 +107,8 @@ int main(int argc, char ** argv){
 	 if(reads!=""){
                	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode);
                	supervisor.indexUnitigs();
+				supervisor.knowNeighbour();
+				cout<<"sucess"<<endl;
                	supervisor.alignAll(!brute,reads);
        	}else{
 				cout<<"-r read_file"<<endl

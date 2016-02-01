@@ -34,7 +34,7 @@
 #include "utils.h"
 
 
-uint64_t transform_to_size_t(__uint128_t n){
+uint64_t transform_to_size_t(__uint128_t& n){
 	return (uint64_t)n;
 }
 
@@ -42,32 +42,62 @@ uint64_t transform_to_size_t(__uint128_t n){
 void printPath(const vector<int32_t>& path, ofstream* file){
 	for(size_t i(0); i<path.size(); ++i){
 		*file<<path[i]<<'.';
+		// cout<<path[i]<<'.';
 	}
-	*file<<endl;
+	*file<<'\n';
+	// cout<<'\n';
 }
 
 
-char revCompChar(char s) {
-	if (s == 'A') return 'T';
-	else if (s == 'C') return 'G';
-	else if (s == 'G') return 'C';
-	else if (s == 'T') return 'A';
-	// else if (s == 'a') return 't';
-	// else if (s == 'c') return 'g';
-	// else if (s == 'g') return 'c';
-	// else if (s == 't') return 'a';
-	//~ cout<<"wtf rc"<<s<<endl;
-	//~ cin.get();
-	return 'X';
+// char revCompChar(char s) {
+// 	if (s == 'A') return 'T';
+// 	else if (s == 'C') return 'G';
+// 	else if (s == 'G') return 'C';
+// 	// else if (s == 'T') return 'A';
+// 	// else if (s == 'a') return 't';
+// 	// else if (s == 'c') return 'g';
+// 	// else if (s == 'g') return 'c';
+// 	// else if (s == 't') return 'a';
+// 	//~ cout<<"wtf rc"<<s<<endl;
+// 	//~ cin.get();
+// 	return 'A';
+// }
+
+
+char revCompChar(char c) {
+	switch (c) {
+		case 'A': return 'T';
+		case 'C': return 'G';
+		case 'G': return 'C';
+	}
+	return 'A';
 }
 
 
 string reverseComplements(const string& s){
 	string rc(s.size(),0);
-	for (int i = (int)s.length() - 1; i >= 0; i--){
+	for (int i((int)s.length() - 1); i >= 0; i--){
 		rc[s.size()-1-i]= revCompChar(s[i]);
+		// rc[s.size()-1-i]=char2int[(uint)s[i]];
 	}
 	return rc;
+}
+
+
+string reverseinplace(string& str){
+	uint i(str.size()-1),j(0);
+	for(; j<str.size()/2; --i, ++j){
+		str[i] ^= 4;
+		str[j] ^= 4;
+		if ((str[i]&3) != 3){str[i]^= 17;}
+		if ((str[j]&3) != 3){str[j]^= 17;}
+		swap(str[i],str[j]);
+	}
+	if(str.size()%2==1){
+		str[j] ^= 4;
+		if ((str[j]&3) != 3){str[j]^= 17;}
+	}
+	return str;
 }
 
 
@@ -167,3 +197,5 @@ kmer rcb(kmer min,uint n){
 	}
 	return res;
 }
+
+void  initRc(/* arguments */){char2int[65]='T';char2int[67]='G';char2int[71]='C';char2int[84]='A';}

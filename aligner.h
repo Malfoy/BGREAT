@@ -40,7 +40,14 @@ using namespace std;
 
 namespace std { template <> struct hash<__uint128_t> {
 	typedef __uint128_t argument_type;
-	typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } }; }
+	typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } };
+}
+
+struct unitig{
+	string str;
+	uNumber end[4];
+	uNumber begin[4];
+};
 
 class Aligner{
 public:
@@ -53,7 +60,7 @@ public:
 //	unordered_map<uint,string> unitigCache;
 	unordered_map <kmer,vector<uint32_t>> right;
 	unordered_map <kmer,vector<uint32_t>> left;
-	vector<string> unitigs;
+	vector<unitig> unitigs;
 	kmer offsetUpdate;
 	unsigned char coreNumber;
 	uint errorsMax,tryNumber;
@@ -68,6 +75,7 @@ public:
 		pathFile.open(paths);
 		noOverlapFile.open(noOverlaps);
 		notMappedFile.open(notMapped);
+		// notMappedFile.open(notMapped,ios::binary);
 		k=kValue;
 		coreNumber=cores;
 		errorsMax=errorsAllowed;
@@ -146,10 +154,11 @@ public:
 	vector<pair<kmer,uint>> getNOverlap(const string& read, uint n);
 	vector<uNumber> alignReadExhaustiveR(const string& read, bool& overlapFound, uint errors);
 	vector<uNumber> alignReadGreedyCover(const string& read, bool& overlapFound, uint errors, bool rc);
-
-
-
-
+	vector<string> getEndStr(kmer bin);
+	vector<string> getBeginStr(kmer bin);
+	void knowNeighbour();
+	vector<pair<string,uNumber>> getBeginOpti(kmer bin, uNumber last);
+	vector<pair<string,uNumber>> getEndOpti(kmer bin, uNumber last);
 
 
 };
