@@ -210,8 +210,8 @@ uint Aligner::mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, cons
 	string unitig,readLeft(read.substr(0,overlap.second)),nextUnitig;
 	// cout<<"moleg"<<endl;
 	// cout<<read.substr(0,overlap.second+k)<<endl;
-	auto rangeUnitigs(getEndOpti(overlap.first,path.back()));
-	// auto rangeUnitigs(getEnd(overlap.first));
+	// auto rangeUnitigs(getEndOpti(overlap.first,path.back()));
+	auto rangeUnitigs(getEnd(overlap.first));
 	// cout<<unitigs[path.back()].str<<endl;
 	// auto rangeUnitigs(getEnd(overlap.first));
 	uint miniMiss(errors+1),miniMissIndice(9);
@@ -271,8 +271,8 @@ uint Aligner::mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, cons
 uint Aligner::mapOnRightEndGreedy(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint errors){
 	// cout<<"moreg"<<endl;
 	string unitig,readLeft(read.substr(overlap.second)),nextUnitig;
-	auto rangeUnitigs(getBeginOpti(overlap.first,path.back()));
-	// auto rangeUnitigs(getBegin(overlap.first));
+	// auto rangeUnitigs(getBeginOpti(overlap.first,path.back()));
+	auto rangeUnitigs(getBegin(overlap.first));
 	uint miniMiss(errors+1), miniMissIndice(9);
 	bool ended(false);
 	// int offset(0);

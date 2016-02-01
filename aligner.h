@@ -60,7 +60,8 @@ public:
 //	unordered_map<uint,string> unitigCache;
 	unordered_map <kmer,vector<uint32_t>> right;
 	unordered_map <kmer,vector<uint32_t>> left;
-	vector<unitig> unitigs;
+	// vector<unitig> unitigs;
+	 vector<string> unitigs;
 	kmer offsetUpdate;
 	unsigned char coreNumber;
 	uint errorsMax,tryNumber;

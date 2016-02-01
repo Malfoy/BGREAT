@@ -217,88 +217,88 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 	return result;
 }
 
-
-vector<pair<string,uNumber>> Aligner::getBeginOpti(kmer bin, uNumber last){
-	// cout<<"getbegin"<<endl;
-	vector<pair<string,uNumber>> result;
-	// kmer rc(rcb(bin,k-1));
-	uNumber* begin(unitigs[(last>=0) ? last : -last].begin);
-	uNumber* end(unitigs[(last>=0) ? last : -last].end);
-	// cout<<lastUnitig.str<<endl;
-	// kmer beg(str2num(lastUnitig.str.substr(0,k-1)));
-	// kmer end(str2num(lastUnitig.str.substr(lastUnitig.str.size()-k+1)));
-	// cout<<lastUnitig.str.substr(lastUnitig.str.size()-k+1)<<endl;
-	// if(bin<=rc){
-	if(last>0){
-		// cout<<1;
-		for(uint i(0);i<4;++i){
-			// cout<<lastUnitig.begin[i]<<endl;
-			if(begin[i]!=0){
-				if(begin[i]>0){
-					result.push_back({unitigs[begin[i]].str,begin[i]});
-				// cout<<"add"<<unitigs[lastUnitig.begin[i]].str<<endl;
-				}else{
-					result.push_back({reverseComplements(unitigs[-begin[i]].str),begin[i]});
-				}
-			}
-		}
-	}else{
-		// cout<<2<<endl;;
-		for(uint i(0);i<4;++i){
-			if(end[i]!=0){
-				if(end[i]>0){
-					// cout<<
-					result.push_back({reverseComplements(unitigs[end[i]].str),-end[i]});
-				}else{
-					result.push_back({(unitigs[-end[i]].str),-end[i]});
-				}
-			}
-		}
-	}
-	return result;
-}
-
-
-vector<pair<string,uNumber>> Aligner::getEndOpti(kmer bin, uNumber last){
-		// cout<<"getend"<<endl;
-	vector<pair<string,uNumber>> result;
-	uNumber* begin(unitigs[(last>=0) ? last : -last].begin);
-	uNumber* end(unitigs[(last>=0) ? last : -last].end);
-		// auto lastUnitig(unitigs[last]);
-	// kmer rc(rcb(bin,k-1));
-	// cout<<lastUnitig.str<<endl;
-	// kmer end(str2num(lastUnitig.str.substr(lastUnitig.str.size()-k+1)));
-	// kmer beg(str2num(lastUnitig.str.substr(0,k-1)));
-	// cout<<lastUnitig.str.substr(lastUnitig.str.size()-k)<<endl;
-	// cout<<bin<<endl;
-	// if(bin<=rc){
-	if(last>0){
-		for(uint i(0);i<4;++i){
-			if(end[i]!=0){
-				if(end[i]>0){
-					result.push_back({unitigs[end[i]].str,end[i]});
-				}else{
-					result.push_back({reverseComplements(unitigs[-end[i]].str),end[i]});
-				}
-			}
-		}
-	}else{
-		// cout<<"lol"<<endl;
-		for(uint i(0);i<4;++i){
-			if(begin[i]!=0){
-				if(begin[i]>0){
-					result.push_back({reverseComplements(unitigs[begin[i]].str),-begin[i]});
-				// cout<<"add"<<unitigs[lastUnitig.begin[i]].str<<endl;
-			}else{
-				result.push_back({(unitigs[-begin[i]].str),-begin[i]});
-				}
-			}
-		}
-	}
-		// cout<<4<<endl;
-	return result;
-}
-
+//
+// vector<pair<string,uNumber>> Aligner::getBeginOpti(kmer bin, uNumber last){
+// 	// cout<<"getbegin"<<endl;
+// 	vector<pair<string,uNumber>> result;
+// 	// kmer rc(rcb(bin,k-1));
+// 	uNumber* begin(unitigs[(last>=0) ? last : -last].begin);
+// 	uNumber* end(unitigs[(last>=0) ? last : -last].end);
+// 	// cout<<lastUnitig.str<<endl;
+// 	// kmer beg(str2num(lastUnitig.str.substr(0,k-1)));
+// 	// kmer end(str2num(lastUnitig.str.substr(lastUnitig.str.size()-k+1)));
+// 	// cout<<lastUnitig.str.substr(lastUnitig.str.size()-k+1)<<endl;
+// 	// if(bin<=rc){
+// 	if(last>0){
+// 		// cout<<1;
+// 		for(uint i(0);i<4;++i){
+// 			// cout<<lastUnitig.begin[i]<<endl;
+// 			if(begin[i]!=0){
+// 				if(begin[i]>0){
+// 					result.push_back({unitigs[begin[i]].str,begin[i]});
+// 				// cout<<"add"<<unitigs[lastUnitig.begin[i]].str<<endl;
+// 				}else{
+// 					result.push_back({reverseComplements(unitigs[-begin[i]].str),begin[i]});
+// 				}
+// 			}
+// 		}
+// 	}else{
+// 		// cout<<2<<endl;;
+// 		for(uint i(0);i<4;++i){
+// 			if(end[i]!=0){
+// 				if(end[i]>0){
+// 					// cout<<
+// 					result.push_back({reverseComplements(unitigs[end[i]].str),-end[i]});
+// 				}else{
+// 					result.push_back({(unitigs[-end[i]].str),-end[i]});
+// 				}
+// 			}
+// 		}
+// 	}
+// 	return result;
+// }
+//
+//
+// vector<pair<string,uNumber>> Aligner::getEndOpti(kmer bin, uNumber last){
+// 		// cout<<"getend"<<endl;
+// 	vector<pair<string,uNumber>> result;
+// 	uNumber* begin(unitigs[(last>=0) ? last : -last].begin);
+// 	uNumber* end(unitigs[(last>=0) ? last : -last].end);
+// 		// auto lastUnitig(unitigs[last]);
+// 	// kmer rc(rcb(bin,k-1));
+// 	// cout<<lastUnitig.str<<endl;
+// 	// kmer end(str2num(lastUnitig.str.substr(lastUnitig.str.size()-k+1)));
+// 	// kmer beg(str2num(lastUnitig.str.substr(0,k-1)));
+// 	// cout<<lastUnitig.str.substr(lastUnitig.str.size()-k)<<endl;
+// 	// cout<<bin<<endl;
+// 	// if(bin<=rc){
+// 	if(last>0){
+// 		for(uint i(0);i<4;++i){
+// 			if(end[i]!=0){
+// 				if(end[i]>0){
+// 					result.push_back({unitigs[end[i]].str,end[i]});
+// 				}else{
+// 					result.push_back({reverseComplements(unitigs[-end[i]].str),end[i]});
+// 				}
+// 			}
+// 		}
+// 	}else{
+// 		// cout<<"lol"<<endl;
+// 		for(uint i(0);i<4;++i){
+// 			if(begin[i]!=0){
+// 				if(begin[i]>0){
+// 					result.push_back({reverseComplements(unitigs[begin[i]].str),-begin[i]});
+// 				// cout<<"add"<<unitigs[lastUnitig.begin[i]].str<<endl;
+// 			}else{
+// 				result.push_back({(unitigs[-begin[i]].str),-begin[i]});
+// 				}
+// 			}
+// 		}
+// 	}
+// 		// cout<<4<<endl;
+// 	return result;
+// }
+//
 
 string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
 	int offset(numbers[0]);
@@ -319,27 +319,20 @@ string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
 
 
 string Aligner::getUnitig(int position){
+	// if(fullMemory){
+	// 	if(position>0){
+	// 		return unitigs[position].str;
+	// 	}
+	// 	return reverseComplements(unitigs[-position].str);
+	// }
 	if(fullMemory){
 		if(position>0){
-			return unitigs[position].str;
+			return unitigs[position];
 		}
-		return reverseComplements(unitigs[-position].str);
+		return reverseComplements(unitigs[-position]);
 	}
 	return "";
-	// cout<<"don't go here"<<endl;
-	// string unitig;
-	// unitigMutex.lock();
-	// {
-	// 	unitigFile.seekg(position,ios::beg);
-	// 	getline(unitigFile,unitig,';');
-	// }
-	// unitigMutex.unlock();
-	// transform(unitig.begin(), unitig.end(), unitig.begin(), ::toupper);
-	// if(unitig.size()<k){
-	// 	cout<<"bug"<<endl;
-	// 	exit(0);
-	// }
-	// return unitig;
+
 }
 
 
@@ -453,7 +446,8 @@ vector<overlapStruct> Aligner::getListOverlapCache(const string& read){
 void Aligner::indexUnitigsAux(){
 	uint position(0),count(0);
 	string line, overlap1, overlap2, waste;
-	unitigs.push_back({"",{0,0,0,0},{0,0,0,0}});
+	// unitigs.push_back({"",{0,0,0,0},{0,0,0,0}});
+	unitigs.push_back("");
 	while(!unitigFile.eof()){
 		if(!fullMemory){
 			position=unitigFile.tellg();
@@ -467,8 +461,9 @@ void Aligner::indexUnitigsAux(){
 		}else{
 			if(++count%1000000==0){cout<<count/1000000<<"M unitigs treated"<<endl;}
 			if(fullMemory){
-				unitigs.push_back({line,{0,0,0,0},{0,0,0,0}});
+				// unitigs.push_back({line,{0,0,0,0},{0,0,0,0}});
 				// cout<<line<<endl;
+				unitigs.push_back(line);
 				position=unitigs.size()-1;
 			}
 			++unitigNumber;
@@ -551,28 +546,28 @@ void Aligner::alignAll(bool greedy, const string& reads){
 }
 
 
-void Aligner::knowNeighbour(){
-	string unitig;
-	vector<pair<string,uNumber>> rangeUnitigs;
-	for(uint i(1); i<unitigs.size();++i){
-		unitig=unitigs[i].str;
-		// cout<<unitig<<endl;
-		// cout<<unitig.substr(0,k-1)<<" "<<unitig.substr(unitig.size()-k+1)<<endl;
-		kmer beg(str2num((unitig.substr(0,k-1))));
-		kmer end(str2num((unitig.substr(unitig.size()-k+1))));
-		rangeUnitigs=(getBegin(end));
-		// cout<<"beg"<<endl;
-		for(uint ii(0); ii<rangeUnitigs.size(); ++ii){
-			unitigs[i].begin[ii]=rangeUnitigs[ii].second;
-			// cout<<rangeUnitigs1[ii].second<<endl;;
-		}
-		// cout<<"end"<<endl;
-		rangeUnitigs=(getEnd(beg));
-		for(uint ii(0); ii<rangeUnitigs.size(); ++ii){
-			unitigs[i].end[ii]=rangeUnitigs[ii].second;
-			// cout<<rangeUnitigs2[ii].second<<endl;;
-		}
-		// cout<<"end"<<endl;
-	}
-	cout<<endl<<endl;
-}
+// void Aligner::knowNeighbour(){
+// 	string unitig;
+// 	vector<pair<string,uNumber>> rangeUnitigs;
+// 	for(uint i(1); i<unitigs.size();++i){
+// 		unitig=unitigs[i].str;
+// 		// cout<<unitig<<endl;
+// 		// cout<<unitig.substr(0,k-1)<<" "<<unitig.substr(unitig.size()-k+1)<<endl;
+// 		kmer beg(str2num((unitig.substr(0,k-1))));
+// 		kmer end(str2num((unitig.substr(unitig.size()-k+1))));
+// 		rangeUnitigs=(getBegin(end));
+// 		// cout<<"beg"<<endl;
+// 		for(uint ii(0); ii<rangeUnitigs.size(); ++ii){
+// 			unitigs[i].begin[ii]=rangeUnitigs[ii].second;
+// 			// cout<<rangeUnitigs1[ii].second<<endl;;
+// 		}
+// 		// cout<<"end"<<endl;
+// 		rangeUnitigs=(getEnd(beg));
+// 		for(uint ii(0); ii<rangeUnitigs.size(); ++ii){
+// 			unitigs[i].end[ii]=rangeUnitigs[ii].second;
+// 			// cout<<rangeUnitigs2[ii].second<<endl;;
+// 		}
+// 		// cout<<"end"<<endl;
+// 	}
+// 	cout<<endl<<endl;
+// }

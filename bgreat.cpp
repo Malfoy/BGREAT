@@ -100,14 +100,14 @@ int main(int argc, char ** argv){
 			break;
 			case 'c':
 				correctionMode=true;
-				pathFile="corrected.fa";
+				// pathFile="corrected.fa";
 			break;
 		}
 	}
 	 if(reads!=""){
                	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode);
                	supervisor.indexUnitigs();
-				supervisor.knowNeighbour();
+				// supervisor.knowNeighbour();
 				cout<<"sucess"<<endl;
                	supervisor.alignAll(!brute,reads);
        	}else{
