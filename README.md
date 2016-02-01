@@ -80,8 +80,3 @@ The other integers are the unitig numbers in the order they appear in the read, 
 
 
 
-
-Experimental option (in developpement)
-====
--b for bruteforce exploration (way slower but a bit more precise)
-
