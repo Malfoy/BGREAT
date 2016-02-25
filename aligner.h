@@ -54,6 +54,8 @@ public:
 	bool partial,fastq,pathOption;
 	ifstream unitigFile, readFile;
 	ofstream pathFile, noOverlapFile, notMappedFile;
+	FILE * pathFilef;
+	FILE * notMappedFilef;
 	atomic<uint> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML,iter;
 	uint k;
 //	unordered_map<uint64_t,vector<uint32_t>> overlap2unitigs;
@@ -66,7 +68,7 @@ public:
 	unsigned char coreNumber;
 	uint errorsMax,tryNumber;
 	mutex unitigMutex, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
-	string unitigFileName;
+	string unitigFileName,pathToWrite;
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory,correctionMode;
 
@@ -74,7 +76,9 @@ public:
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
 		pathFile.open(paths);
-		noOverlapFile.open(noOverlaps);
+		pathFilef=fopen(paths.c_str(),"wb");
+		notMappedFilef=fopen(notMapped.c_str(),"wb");
+		// noOverlapFile.open(noOverlaps);
 		notMappedFile.open(notMapped);
 		// notMappedFile.open(notMapped,ios::binary);
 		k=kValue;
@@ -160,7 +164,7 @@ public:
 	void knowNeighbour();
 	vector<pair<string,uNumber>> getBeginOpti(kmer bin, uNumber last);
 	vector<pair<string,uNumber>> getEndOpti(kmer bin, uNumber last);
-
+	string printPath(const vector<int32_t>& path);
 
 };
 

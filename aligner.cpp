@@ -217,6 +217,9 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 	return result;
 }
 
+
+
+
 //
 // vector<pair<string,uNumber>> Aligner::getBeginOpti(kmer bin, uNumber last){
 // 	// cout<<"getbegin"<<endl;
@@ -571,3 +574,18 @@ void Aligner::alignAll(bool greedy, const string& reads){
 // 	}
 // 	cout<<endl<<endl;
 // }
+
+
+string Aligner::printPath(const vector<int32_t>& path){
+	string res;
+	for(uint i(0); i<path.size(); ++i){
+		// *file<<path[i]<<'.';
+		res+=to_string(path[i]);
+		res+='.';
+	}
+	// *file<<'\n';
+
+	// pathFile<<pathToWrite<<'\n';
+	res+='\n';
+	return res;
+}

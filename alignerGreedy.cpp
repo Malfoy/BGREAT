@@ -729,31 +729,40 @@ void Aligner::alignPartGreedy(){
 				path=alignReadGreedy(read,overlapFound,errorsMax,false);
 			}
 			if(path.size()!=0){
-				pathMutex.lock();
-				{
-					if(correctionMode){
-						corrected=(recoverPath(path,read.size()));
-						// pathFile<<header<<'\n';
-						pathFile<<corrected<<'\n';
-					}else{
-						// pathFile<<header<<'\n';
-						// cout<<header<<'\n';
-						printPath(path,&pathFile);
+				if(correctionMode){
+				//if(true){
+					corrected=(recoverPath(path,read.size()));
+					// pathFile<<header<<'\n';
+					// pathFile<<corrected<<'\n';
+					corrected+='\n';
+					pathMutex.lock();
+					{
+						fwrite((corrected).c_str(), sizeof(char), corrected.size(), pathFilef);
 					}
+					pathMutex.unlock();
+			}else{
+					// pathFile<<header<<'\n';
+					header+='\n'+printPath(path);;
+					pathMutex.lock();
+					{
+						fwrite((header).c_str(), sizeof(char), header.size(), pathFilef);
+					}
+					pathMutex.unlock();
 				}
-				pathMutex.unlock();
 			}else{
 				if(false){
 					noOverlapMutex.lock();
 					{
 						noOverlapFile<<header<<'\n'<<read<<'\n';
-						// cout<<header<<'\n'<<read<<'\n';
 					}
 					noOverlapMutex.unlock();
 				}else{
+					header+='\n'+read+'\n';
 					notMappedMutex.lock();
 					{
-						notMappedFile<<header<<'\n'<<read<<'\n';
+						// notMappedFile<<header<<'\n'<<read<<'\n';
+
+						fwrite(header.c_str(), sizeof(char), header.size(), notMappedFilef);
 						// notMappedFile<<readNumber<<'\n';
 						// cout<<header<<'\n'<<read<<'\n';
 					}

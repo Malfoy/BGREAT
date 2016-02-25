@@ -289,7 +289,7 @@ void Aligner::alignPartExhaustive(){
 			if(path.size()!=0){
 				pathMutex.lock();
 				{
-					printPath(path,&pathFile);
+					printPath(path);
 				}
 				pathMutex.unlock();
 			}else{
