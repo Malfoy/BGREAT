@@ -19,8 +19,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *****************************************************************************/
-#include "aligner.h"
-#include "utils.h"
 #include <thread>
 #include <iostream>
 #include <fstream>
@@ -32,9 +30,6 @@
 #include <chrono>
 #include <map>
 #include <set>
-
-
-
 
 
 vector<uNumber> Aligner::alignReadExhaustive(const string& read, bool& overlapFound, uint errors){

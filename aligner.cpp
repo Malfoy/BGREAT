@@ -144,164 +144,189 @@ string Aligner::num2str(kmer num){
 }
 
 
+// vector<pair<string,uNumber>> Aligner::getEnd(kmer bin){
+// 	vector<pair<string,uNumber>> result;
+// 	kmer rc(rcb(bin,k-1));
+// 	string unitig;
+// 	uNumber num;
+// 	if(bin<=rc){
+// 		if(right.count(bin)!=0){
+// 			for(uint i(0); i<right[bin].size(); ++i){
+// 				num=right[bin][i];
+// 				unitig=(getUnitig(num));
+// 				if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
+// 					result.push_back({unitig,num});
+// 				}else{
+// 					result.push_back({reverseComplements(unitig),-num});
+// 				}
+// 			}
+// 		}else{
+// 			return {};
+// 		}
+// 	}else{
+// 		if(left.count(rc)!=0){
+// 			for(uint i(0); i<left[rc].size(); ++i){
+// 				num=left[rc][i];
+// 				unitig=(getUnitig(num));
+// 				if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
+// 					result.push_back({unitig,num});
+// 				}else{
+// 					result.push_back({reverseComplements(unitig),-num});
+// 				}
+// 			}
+// 		}else{
+// 			return {};
+// 		}
+// 	}
+// 	return result;
+// }
+//TODO replace vector by struct
 vector<pair<string,uNumber>> Aligner::getEnd(kmer bin){
 	vector<pair<string,uNumber>> result;
 	kmer rc(rcb(bin,k-1));
 	string unitig;
+	unitigIndices indices;
 	uNumber num;
+	bool go(false);
 	if(bin<=rc){
-		if(right.count(bin)!=0){
-			for(uint i(0); i<right[bin].size(); ++i){
-				num=right[bin][i];
-				unitig=(getUnitig(num));
-				if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
-					result.push_back({unitig,num});
-				}else{
-					result.push_back({reverseComplements(unitig),-num});
-				}
-			}
-		}else{
-			return {};
+		indices=rightIndices[rightMPHF.lookup(bin)];
+		if(indices.overlap==bin){
+			go=true;
 		}
 	}else{
-		if(left.count(rc)!=0){
-			for(uint i(0); i<left[rc].size(); ++i){
-				num=left[rc][i];
-				unitig=(getUnitig(num));
+		indices=leftIndices[leftMPHF.lookup(rc)];
+		if(indices.overlap==rc){
+			go=true;
+		}
+	}
+	if(go){
+		if(indices.indice1!=0){
+			unitig=unitigs[indices.indice1];
+			if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
+				result.push_back({unitig,indices.indice1});
+			}else{
+				result.push_back({reverseComplements(unitig),-indices.indice1});
+			}
+			if(indices.indice2!=0){
+				unitig=unitigs[indices.indice2];
 				if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
-					result.push_back({unitig,num});
+					result.push_back({unitig,indices.indice2});
 				}else{
-					result.push_back({reverseComplements(unitig),-num});
+					result.push_back({reverseComplements(unitig),-indices.indice2});
+				}
+				if(indices.indice3!=0){
+					unitig=unitigs[indices.indice3];
+					if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
+						result.push_back({unitig,indices.indice3});
+					}else{
+						result.push_back({reverseComplements(unitig),-indices.indice3});
+					}
+					if(indices.indice4!=0){
+						unitig=unitigs[indices.indice4];
+						if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
+							result.push_back({unitig,indices.indice4});
+						}else{
+							result.push_back({reverseComplements(unitig),-indices.indice4});
+						}
+					}
 				}
 			}
-		}else{
-			return {};
 		}
 	}
 	return result;
 }
 
 
-//TODO can count be removed with the use of at ?
 vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 	vector<pair<string,uNumber>> result;
 	kmer rc(rcb(bin,k-1));
 	string unitig;
+	unitigIndices indices;
+	bool go(false);
 	if(bin<=rc){
-		if(left.count(bin)!=0){
-			for(uint i(0); i<left[bin].size(); ++i){
-				unitig=(getUnitig(left.at(bin)[i]));
-				if(str2num(unitig.substr(0,k-1))==bin){
-					result.push_back({unitig,left.at(bin)[i]});
-				}else{
-					result.push_back({reverseComplements(unitig),-left.at(bin)[i]});
-				}
-			}
-		}else{
-			return {};
+		indices=leftIndices[leftMPHF.lookup(bin)];
+		if(indices.overlap==bin){
+			go=true;
 		}
 	}else{
-		if(right.count(rc)!=0){
-			for(uint i(0); i<right[rc].size(); ++i){
-				unitig=(getUnitig(right.at(rc)[i]));
+		indices=rightIndices[rightMPHF.lookup(rc)];
+		if(indices.overlap==rc){
+			go=true;
+		}
+	}
+	if(go){
+		if(indices.indice1!=0){
+			unitig=unitigs[indices.indice1];
+			if(str2num(unitig.substr(0,k-1))==bin){
+				result.push_back({unitig,indices.indice1});
+			}else{
+				result.push_back({reverseComplements(unitig),-indices.indice1});
+			}
+			if(indices.indice2!=0){
+				unitig=unitigs[indices.indice2];
 				if(str2num(unitig.substr(0,k-1))==bin){
-					result.push_back({unitig,right.at(rc)[i]});
+					result.push_back({unitig,indices.indice2});
 				}else{
-					result.push_back({reverseComplements(unitig),-right.at(rc)[i]});
+					result.push_back({reverseComplements(unitig),-indices.indice2});
+				}
+				if(indices.indice3!=0){
+					unitig=unitigs[indices.indice3];
+					if(str2num(unitig.substr(0,k-1))==bin){
+						result.push_back({unitig,indices.indice3});
+					}else{
+						result.push_back({reverseComplements(unitig),-indices.indice3});
+					}
+					if(indices.indice4!=0){
+						unitig=unitigs[indices.indice4];
+						if(str2num(unitig.substr(0,k-1))==bin){
+							result.push_back({unitig,indices.indice4});
+						}else{
+							result.push_back({reverseComplements(unitig),-indices.indice4});
+						}
+					}
 				}
 			}
-		}else{
-			return {};
 		}
 	}
 	return result;
 }
 
 
-
-
-//
-// vector<pair<string,uNumber>> Aligner::getBeginOpti(kmer bin, uNumber last){
-// 	// cout<<"getbegin"<<endl;
+// //TODO can count be removed with the use of at ?
+// vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 // 	vector<pair<string,uNumber>> result;
-// 	// kmer rc(rcb(bin,k-1));
-// 	uNumber* begin(unitigs[(last>=0) ? last : -last].begin);
-// 	uNumber* end(unitigs[(last>=0) ? last : -last].end);
-// 	// cout<<lastUnitig.str<<endl;
-// 	// kmer beg(str2num(lastUnitig.str.substr(0,k-1)));
-// 	// kmer end(str2num(lastUnitig.str.substr(lastUnitig.str.size()-k+1)));
-// 	// cout<<lastUnitig.str.substr(lastUnitig.str.size()-k+1)<<endl;
-// 	// if(bin<=rc){
-// 	if(last>0){
-// 		// cout<<1;
-// 		for(uint i(0);i<4;++i){
-// 			// cout<<lastUnitig.begin[i]<<endl;
-// 			if(begin[i]!=0){
-// 				if(begin[i]>0){
-// 					result.push_back({unitigs[begin[i]].str,begin[i]});
-// 				// cout<<"add"<<unitigs[lastUnitig.begin[i]].str<<endl;
+// 	kmer rc(rcb(bin,k-1));
+// 	string unitig;
+// 	if(bin<=rc){
+// 		if(left.count(bin)!=0){
+// 			for(uint i(0); i<left[bin].size(); ++i){
+// 				unitig=(getUnitig(left.at(bin)[i]));
+// 				if(str2num(unitig.substr(0,k-1))==bin){
+// 					result.push_back({unitig,left.at(bin)[i]});
 // 				}else{
-// 					result.push_back({reverseComplements(unitigs[-begin[i]].str),begin[i]});
+// 					result.push_back({reverseComplements(unitig),-left.at(bin)[i]});
 // 				}
 // 			}
+// 		}else{
+// 			return {};
 // 		}
 // 	}else{
-// 		// cout<<2<<endl;;
-// 		for(uint i(0);i<4;++i){
-// 			if(end[i]!=0){
-// 				if(end[i]>0){
-// 					// cout<<
-// 					result.push_back({reverseComplements(unitigs[end[i]].str),-end[i]});
+// 		if(right.count(rc)!=0){
+// 			for(uint i(0); i<right[rc].size(); ++i){
+// 				unitig=(getUnitig(right.at(rc)[i]));
+// 				if(str2num(unitig.substr(0,k-1))==bin){
+// 					result.push_back({unitig,right.at(rc)[i]});
 // 				}else{
-// 					result.push_back({(unitigs[-end[i]].str),-end[i]});
+// 					result.push_back({reverseComplements(unitig),-right.at(rc)[i]});
 // 				}
 // 			}
+// 		}else{
+// 			return {};
 // 		}
 // 	}
 // 	return result;
 // }
-//
-//
-// vector<pair<string,uNumber>> Aligner::getEndOpti(kmer bin, uNumber last){
-// 		// cout<<"getend"<<endl;
-// 	vector<pair<string,uNumber>> result;
-// 	uNumber* begin(unitigs[(last>=0) ? last : -last].begin);
-// 	uNumber* end(unitigs[(last>=0) ? last : -last].end);
-// 		// auto lastUnitig(unitigs[last]);
-// 	// kmer rc(rcb(bin,k-1));
-// 	// cout<<lastUnitig.str<<endl;
-// 	// kmer end(str2num(lastUnitig.str.substr(lastUnitig.str.size()-k+1)));
-// 	// kmer beg(str2num(lastUnitig.str.substr(0,k-1)));
-// 	// cout<<lastUnitig.str.substr(lastUnitig.str.size()-k)<<endl;
-// 	// cout<<bin<<endl;
-// 	// if(bin<=rc){
-// 	if(last>0){
-// 		for(uint i(0);i<4;++i){
-// 			if(end[i]!=0){
-// 				if(end[i]>0){
-// 					result.push_back({unitigs[end[i]].str,end[i]});
-// 				}else{
-// 					result.push_back({reverseComplements(unitigs[-end[i]].str),end[i]});
-// 				}
-// 			}
-// 		}
-// 	}else{
-// 		// cout<<"lol"<<endl;
-// 		for(uint i(0);i<4;++i){
-// 			if(begin[i]!=0){
-// 				if(begin[i]>0){
-// 					result.push_back({reverseComplements(unitigs[begin[i]].str),-begin[i]});
-// 				// cout<<"add"<<unitigs[lastUnitig.begin[i]].str<<endl;
-// 			}else{
-// 				result.push_back({(unitigs[-begin[i]].str),-begin[i]});
-// 				}
-// 			}
-// 		}
-// 	}
-// 		// cout<<4<<endl;
-// 	return result;
-// }
-//
+
 
 string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
 	int offset(numbers[0]);
@@ -322,12 +347,6 @@ string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
 
 
 string Aligner::getUnitig(int position){
-	// if(fullMemory){
-	// 	if(position>0){
-	// 		return unitigs[position].str;
-	// 	}
-	// 	return reverseComplements(unitigs[-position].str);
-	// }
 	if(fullMemory){
 		if(position>0){
 			return unitigs[position];
@@ -356,12 +375,21 @@ vector<pair<kmer,uint>> Aligner::getListOverlap(const string& read){
 	vector<pair<kmer,uint>> listOverlap;
 	string overlap(read.substr(0,k-1));
 	kmer num(str2num(overlap)),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
-
+	uint64_t hash;
 	for(uint i(0);;++i){
-		if(left.count(rep)!=0){
+		// if(left.count(rep)!=0){
+		// 	listOverlap.push_back({num,i});
+		// }else{
+		// 	if(right.count(rep)!=0){
+		// 		listOverlap.push_back({num,i});
+		// 	}
+		// }
+		hash=leftMPHF.lookup(rep);
+		if(true){//TODO test if is a true overlap
 			listOverlap.push_back({num,i});
 		}else{
-			if(right.count(rep)!=0){
+			hash=rightMPHF.lookup(rep);
+			if(true){
 				listOverlap.push_back({num,i});
 			}
 		}
@@ -379,12 +407,15 @@ vector<pair<kmer,uint>> Aligner::getListOverlap(const string& read){
 
 vector<pair<kmer,uint>> Aligner::getNOverlap(const string& read, uint n){
 	vector<pair<kmer,uint>> listOverlap;
+	uint64_t hash;
 	kmer num(str2num(read.substr(0,k-1))),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
 	for(uint i(0);;++i){
-		if(left.unordered_map::count(rep)!=0){
+		hash=leftMPHF.lookup(rep);
+		if(leftIndices[hash].overlap==rep){
 			listOverlap.push_back({num,i});
 		}else{
-			if(right.unordered_map::count(rep)!=0){
+			hash=rightMPHF.lookup(rep);
+			if(rightIndices[hash].overlap==rep){
 				listOverlap.push_back({num,i});
 			}
 		}
@@ -403,99 +434,166 @@ vector<pair<kmer,uint>> Aligner::getNOverlap(const string& read, uint n){
 }
 
 
-vector<overlapStruct> Aligner::getListOverlapCache(const string& read){
-	vector<overlapStruct> listOverlap;
-	string overlap(read.substr(0,k-1));
-	kmer num(str2num(overlap)),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
-	overlapStruct over;
-	bool push;
-	for(uint i(0);;++i){
-		push=false;
-		over.unitig.clear();
-		over.unitigNumbers.clear();
-		if(right.count(rep)!=0){
-			for(uint ii(0); ii<right[rep].size(); ++ii){
-				over.seq=num;
-				over.pos=i;
-				over.unitig.push_back(getUnitig(right[rep][ii]));
-				over.unitigNumbers.push_back(right[rep][ii]);
-			}
-			push=true;
-		}
-		if(left.count(rep)!=0){
-			for(uint ii(0); ii<left[rep].size(); ++ii){
-				over.seq=num;
-				over.pos=i;
-				over.unitig.push_back(getUnitig(left[rep][ii]));
-				over.unitigNumbers.push_back(left[rep][ii]);
-			}
-			push=true;
-		}
 
-		if(push){listOverlap.push_back(over);}
-		if(i+k-1<read.size()){
-			update(num,read[i+k-1]);
-			updateRC(rcnum,read[i+k-1]);
-			rep=(min(num, rcnum));
-		}else{
-			return listOverlap;
-		}
-	}
-	return listOverlap;
-}
+// void Aligner::indexUnitigsAux(){
+// 	uint position(0),count(0);
+// 	string line, overlap1, overlap2, waste;
+// 	// unitigs.push_back({"",{0,0,0,0},{0,0,0,0}});
+// 	unitigs.push_back("");
+// 	while(!unitigFile.eof()){
+// 		if(!fullMemory){
+// 			position=unitigFile.tellg();
+// 		}
+// 		getline(unitigFile,line);
+// 		getline(unitigFile,line);
+// 		// unitigFile.seekg(1, ios::cur);
+// 		// transform(line.begin(), line.end(), line.begin(), ::toupper);
+// 		if(line.size()<k){
+// 			break;
+// 		}else{
+// 			if(++count%1000000==0){cout<<count/1000000<<"M unitigs treated"<<endl;}
+// 			if(fullMemory){
+// 				// unitigs.push_back({line,{0,0,0,0},{0,0,0,0}});
+// 				// cout<<line<<endl;
+// 				unitigs.push_back(line);
+// 				position=unitigs.size()-1;
+// 			}
+// 			++unitigNumber;
+//
+// 			kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
+// 			if(beg<=rcBeg){
+// 				left[(beg)].push_back(position);
+// 			}else{
+// 				right[(rcBeg)].push_back(position);
+// 			}
+// 			kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
+// 			if(end<=rcEnd){
+// 				right[(end)].push_back(position);
+// 			}else{
+// 				left[(rcEnd)].push_back(position);
+// 			}
+// 		}
+// 	}
+// }
 
-
-//TODO can be multithreaded with N hash table and a xorshift
 void Aligner::indexUnitigsAux(){
-	uint position(0),count(0);
-	string line, overlap1, overlap2, waste;
-	// unitigs.push_back({"",{0,0,0,0},{0,0,0,0}});
 	unitigs.push_back("");
+	string line;
+	unitigIndices indices;
+	vector<kmer> leftOver,rightOver;
 	while(!unitigFile.eof()){
-		if(!fullMemory){
-			position=unitigFile.tellg();
-		}
 		getline(unitigFile,line);
 		getline(unitigFile,line);
-		// unitigFile.seekg(1, ios::cur);
-		// transform(line.begin(), line.end(), line.begin(), ::toupper);
 		if(line.size()<k){
 			break;
 		}else{
-			if(++count%1000000==0){cout<<count/1000000<<"M unitigs treated"<<endl;}
-			if(fullMemory){
-				// unitigs.push_back({line,{0,0,0,0},{0,0,0,0}});
-				// cout<<line<<endl;
-				unitigs.push_back(line);
-				position=unitigs.size()-1;
-			}
-			++unitigNumber;
-
+			unitigs.push_back(line);
 			kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
 			if(beg<=rcBeg){
-				left[(beg)].push_back(position);
+				leftOver.push_back(beg);
 			}else{
-				right[(rcBeg)].push_back(position);
+				rightOver.push_back(rcBeg);
 			}
 			kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
 			if(end<=rcEnd){
-				right[(end)].push_back(position);
+				rightOver.push_back(end);
 			}else{
-				left[(rcEnd)].push_back(position);
+				leftOver.push_back(rcEnd);
 			}
+		}
+	}
+	sort( leftOver.begin(), leftOver.end() );
+	leftOver.erase( unique( leftOver.begin(), leftOver.end() ), leftOver.end() );
+	sort( rightOver.begin(), rightOver.end() );
+	rightOver.erase( unique( rightOver.begin(), rightOver.end() ), rightOver.end() );
+	auto data_iterator = boomphf::range(static_cast<const kmer*>(&leftOver[0]), static_cast<const kmer*>(&leftOver[0]+leftOver.size()));
+	leftMPHF= boomphf::mphf<kmer,hasher>(leftOver.size(),data_iterator,8,gammaFactor,false);
+	auto data_iterator2 = boomphf::range(static_cast<const kmer*>(&rightOver[0]), static_cast<const kmer*>(&rightOver[0]+rightOver.size()));
+	rightMPHF= boomphf::mphf<kmer,hasher>(rightOver.size(),data_iterator2,8,gammaFactor,false);
+	//TODO dessalocate leftover and right over
+	//TODO duplicate?
+	leftIndices.resize(leftOver.size(),{0,0,0,0,0});
+	rightIndices.resize(rightOver.size(),{0,0,0,0,0});
+	for(uint i(1);i<unitigs.size();++i){
+		line=unitigs[i];
+		kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
+		if(beg<=rcBeg){
+			indices=leftIndices[leftMPHF.lookup(beg)];
+			indices.overlap=beg;
+			if(indices.indice1==0){
+				indices.indice1=i;
+			}else if(indices.indice2==0){
+				// cout<<2<<endl;
+				indices.indice2=i;
+			}else if(indices.indice3==0){
+					// cout<<3<<endl;
+				indices.indice3=i;
+			}else{
+				indices.indice4=i;
+			}
+			leftIndices[leftMPHF.lookup(beg)]=indices;
+		}else{
+			indices=rightIndices[rightMPHF.lookup(rcBeg)];
+			indices.overlap=rcBeg;
+			if(indices.indice1==0){
+				indices.indice1=i;
+			}else if(indices.indice2==0){
+					// cout<<2<<endl;
+				indices.indice2=i;
+			}else if(indices.indice3==0){
+					// cout<<3<<endl;
+				indices.indice3=i;
+			}else{
+				indices.indice4=i;
+			}
+			rightIndices[rightMPHF.lookup(rcBeg)]=indices;
+		}
+		kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
+		if(end<=rcEnd){
+			indices=rightIndices[rightMPHF.lookup(end)];
+			indices.overlap=end;
+			if(indices.indice1==0){
+				indices.indice1=i;
+			}else if(indices.indice2==0){
+					// cout<<2<<endl;
+				indices.indice2=i;
+			}else if(indices.indice3==0){
+					// cout<<3<<endl;
+				indices.indice3=i;
+			}else{
+				indices.indice4=i;
+			}
+			rightIndices[rightMPHF.lookup(end)]=indices;
+		}else{
+			indices=leftIndices[leftMPHF.lookup(rcEnd)];
+			indices.overlap=rcEnd;
+			if(indices.indice1==0){
+				indices.indice1=i;
+			}else if(indices.indice2==0){
+					// cout<<2<<endl;
+				indices.indice2=i;
+			}else if(indices.indice3==0){
+					// cout<<3<<endl;
+				indices.indice3=i;
+			}else{
+				indices.indice4=i;
+			}
+			leftIndices[leftMPHF.lookup(rcEnd)]=indices;
 		}
 	}
 }
 
 
 void Aligner::indexUnitigs(){
+	auto startChrono=chrono::system_clock::now();
 	uint nbThreads(1);
 	vector<thread> threads;
 	for (uint i(0); i<nbThreads; ++i){
 		threads.push_back(thread(&Aligner::indexUnitigsAux,this));
 	}
 	for(auto &t : threads){t.join();}
-	cout<<"Number of unitig: "<<unitigNumber<<endl;
+	auto end=chrono::system_clock::now();auto waitedFor=end-startChrono;
+	cout<<"Indexing in seconds : "<<(chrono::duration_cast<chrono::seconds>(waitedFor).count())<<endl;
 }
 
 
@@ -537,7 +635,7 @@ void Aligner::alignAll(bool greedy, const string& reads){
 	}
 	for(auto &t : threads){t.join();}
 
-	cout<<"Ended"<<endl;
+	cout<<"The End"<<endl;
 	cout<<"Read : "<<readNumber<<endl;
 	cout<<"No Overlap : "<<noOverlapRead<<" Percent : "<<(100*float(noOverlapRead))/readNumber<<endl;
 	cout<<"Got Overlap : "<<alignedRead+notAligned<<" Percent : "<<(100*float(alignedRead+notAligned))/readNumber<<endl;
@@ -545,35 +643,8 @@ void Aligner::alignAll(bool greedy, const string& reads){
 	cout<<"Overlap but no aligne: "<<notAligned<<" Percent : "<<(100*float(notAligned))/(alignedRead+notAligned)<<endl;
 	auto end=chrono::system_clock::now();auto waitedFor=end-startChrono;
 	cout<<"Reads/seconds : "<<readNumber/(chrono::duration_cast<chrono::seconds>(waitedFor).count()+1)<<endl;
-	cout<<endl;
+	cout<<"Mapping in seconds : "<<(chrono::duration_cast<chrono::seconds>(waitedFor).count())<<endl;
 }
-
-
-// void Aligner::knowNeighbour(){
-// 	string unitig;
-// 	vector<pair<string,uNumber>> rangeUnitigs;
-// 	for(uint i(1); i<unitigs.size();++i){
-// 		unitig=unitigs[i].str;
-// 		// cout<<unitig<<endl;
-// 		// cout<<unitig.substr(0,k-1)<<" "<<unitig.substr(unitig.size()-k+1)<<endl;
-// 		kmer beg(str2num((unitig.substr(0,k-1))));
-// 		kmer end(str2num((unitig.substr(unitig.size()-k+1))));
-// 		rangeUnitigs=(getBegin(end));
-// 		// cout<<"beg"<<endl;
-// 		for(uint ii(0); ii<rangeUnitigs.size(); ++ii){
-// 			unitigs[i].begin[ii]=rangeUnitigs[ii].second;
-// 			// cout<<rangeUnitigs1[ii].second<<endl;;
-// 		}
-// 		// cout<<"end"<<endl;
-// 		rangeUnitigs=(getEnd(beg));
-// 		for(uint ii(0); ii<rangeUnitigs.size(); ++ii){
-// 			unitigs[i].end[ii]=rangeUnitigs[ii].second;
-// 			// cout<<rangeUnitigs2[ii].second<<endl;;
-// 		}
-// 		// cout<<"end"<<endl;
-// 	}
-// 	cout<<endl<<endl;
-// }
 
 
 string Aligner::printPath(const vector<int32_t>& path){

@@ -49,21 +49,6 @@ void printPath(const vector<int32_t>& path, ofstream* file){
 }
 
 
-// char revCompChar(char s) {
-// 	if (s == 'A') return 'T';
-// 	else if (s == 'C') return 'G';
-// 	else if (s == 'G') return 'C';
-// 	// else if (s == 'T') return 'A';
-// 	// else if (s == 'a') return 't';
-// 	// else if (s == 'c') return 'g';
-// 	// else if (s == 'g') return 'c';
-// 	// else if (s == 't') return 'a';
-// 	//~ cout<<"wtf rc"<<s<<endl;
-// 	//~ cin.get();
-// 	return 'A';
-// }
-
-
 char revCompChar(char c) {
 	switch (c) {
 		case 'A': return 'T';

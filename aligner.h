@@ -31,11 +31,14 @@
 #include <mutex>
 #include <unordered_map>
 #include "utils.h"
+#include "BooPHF.h"
 
-// #include <sparsehash/dense_hash_map>
 
 using namespace std;
-// using namespace google;
+
+
+typedef boomphf::SingleHashFunctor<u_int64_t>  hasher;
+typedef boomphf::mphf<  u_int64_t, hasher  > MPHF;
 
 
 namespace std { template <> struct hash<__uint128_t> {
@@ -43,11 +46,14 @@ namespace std { template <> struct hash<__uint128_t> {
 	typedef uint64_t result_type; uint64_t operator()(__uint128_t key) const { return transform_to_size_t(key); } };
 }
 
-struct unitig{
-	string str;
-	uNumber end[4];
-	uNumber begin[4];
+struct unitigIndices{
+	kmer overlap;
+	uint32_t indice1;
+	uint32_t indice2;
+	uint32_t indice3;
+	uint32_t indice4;
 };
+
 
 class Aligner{
 public:
@@ -56,16 +62,16 @@ public:
 	ofstream pathFile, noOverlapFile, notMappedFile;
 	FILE * pathFilef;
 	FILE * notMappedFilef;
+	MPHF leftMPHF,rightMPHF;
+	vector<unitigIndices> leftIndices,rightIndices;
 	atomic<uint> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML,iter;
 	uint k;
-//	unordered_map<uint64_t,vector<uint32_t>> overlap2unitigs;
-//	unordered_map<uint,string> unitigCache;
-	unordered_map <kmer,vector<uint32_t>> right;
-	unordered_map <kmer,vector<uint32_t>> left;
-	// vector<unitig> unitigs;
-	 vector<string> unitigs;
+	// unordered_map <kmer,vector<uint32_t>> right;
+	// unordered_map <kmer,vector<uint32_t>> left;
+	vector<string> unitigs;
 	kmer offsetUpdate;
-	unsigned char coreNumber;
+	uint coreNumber;
+	uint gammaFactor;
 	uint errorsMax,tryNumber;
 	mutex unitigMutex, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
 	string unitigFileName,pathToWrite;
@@ -85,6 +91,7 @@ public:
 		coreNumber=cores;
 		errorsMax=errorsAllowed;
 		tryNumber=2;
+		gammaFactor=1;
 		fullMemory=true;
 		correctionMode=bcorrectionMode;
 		partial=bpartial;
