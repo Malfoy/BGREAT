@@ -189,12 +189,16 @@ vector<pair<string,uNumber>> Aligner::getEnd(kmer bin){
 	uNumber num;
 	bool go(false);
 	if(bin<=rc){
+		// unitigMutex2.lock();
 		indices=rightIndices[rightMPHF.lookup(bin)];
+		// unitigMutex2.unlock();
 		if(indices.overlap==bin){
 			go=true;
 		}
 	}else{
+		// unitigMutex.lock();
 		indices=leftIndices[leftMPHF.lookup(rc)];
+		// unitigMutex.unlock();
 		if(indices.overlap==rc){
 			go=true;
 		}
@@ -244,12 +248,16 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 	unitigIndices indices;
 	bool go(false);
 	if(bin<=rc){
+		// unitigMutex.lock();
 		indices=leftIndices[leftMPHF.lookup(bin)];
+		// unitigMutex.unlock();
 		if(indices.overlap==bin){
 			go=true;
 		}
 	}else{
+		// unitigMutex2.lock();
 		indices=rightIndices[rightMPHF.lookup(rc)];
+		// unitigMutex2.unlock();
 		if(indices.overlap==rc){
 			go=true;
 		}

@@ -73,7 +73,7 @@ public:
 	uint coreNumber;
 	uint gammaFactor;
 	uint errorsMax,tryNumber;
-	mutex unitigMutex, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
+	mutex unitigMutex,unitigMutex2, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
 	string unitigFileName,pathToWrite;
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory,correctionMode;
