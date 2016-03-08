@@ -356,10 +356,10 @@ void Aligner::alignPartGreedy(){
 					corrected=(recoverPath(path,read.size()));
 					// pathFile<<header<<'\n';
 					// pathFile<<corrected<<'\n';
-					corrected+='\n';
+					header+='\n'+corrected+'\n';
 					pathMutex.lock();
 					{
-						fwrite((corrected).c_str(), sizeof(char), corrected.size(), pathFilef);
+						fwrite((header).c_str(), sizeof(char), header.size(), pathFilef);
 					}
 					pathMutex.unlock();
 			}else{

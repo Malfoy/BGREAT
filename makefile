@@ -2,7 +2,7 @@
 CC=g++
 #CC=clang++
 CFLAGS=  -Wall  -Ofast -std=c++11 -march=native -flto -Wfatal-errors -pipe -funit-at-a-time -fomit-frame-pointer
-LDFLAGS=-flto
+LDFLAGS=-flto -lpthread
 
 
 ifeq ($(gprof),1)

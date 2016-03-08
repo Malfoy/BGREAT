@@ -15,6 +15,7 @@
 #include <sys/time.h>
 #include <string.h>
 #include <memory> // for make_shared
+#include <limits.h>
 
 
 namespace boomphf {
