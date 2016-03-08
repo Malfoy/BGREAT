@@ -189,18 +189,25 @@ vector<pair<string,uNumber>> Aligner::getEnd(kmer bin){
 	uNumber num;
 	bool go(false);
 	if(bin<=rc){
-		// unitigMutex2.lock();
-		indices=rightIndices[rightMPHF.lookup(bin)];
-		// unitigMutex2.unlock();
-		if(indices.overlap==bin){
-			go=true;
+		uint64_t hash=rightMPHF.lookup(bin);
+		if(hash!=ULLONG_MAX){
+			indices=rightIndices[hash];
+			if(indices.overlap==bin){
+				go=true;
+			}
 		}
+
+		// unitigMutex2.unlock();
+
 	}else{
 		// unitigMutex.lock();
-		indices=leftIndices[leftMPHF.lookup(rc)];
+		uint64_t hash=leftMPHF.lookup(rc);
+		if(hash!=ULLONG_MAX){
+			indices=leftIndices[hash];
 		// unitigMutex.unlock();
-		if(indices.overlap==rc){
-			go=true;
+			if(indices.overlap==rc){
+				go=true;
+			}
 		}
 	}
 	if(go){
@@ -249,17 +256,23 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 	bool go(false);
 	if(bin<=rc){
 		// unitigMutex.lock();
-		indices=leftIndices[leftMPHF.lookup(bin)];
+		uint64_t hash=leftMPHF.lookup(bin);
+		if(hash!=ULLONG_MAX){
+			indices=leftIndices[hash];
 		// unitigMutex.unlock();
-		if(indices.overlap==bin){
-			go=true;
+			if(indices.overlap==bin){
+				go=true;
+			}
 		}
 	}else{
 		// unitigMutex2.lock();
-		indices=rightIndices[rightMPHF.lookup(rc)];
-		// unitigMutex2.unlock();
-		if(indices.overlap==rc){
-			go=true;
+		uint64_t hash=rightMPHF.lookup(rc);
+		if(hash!=ULLONG_MAX){
+			indices=rightIndices[hash];
+			// unitigMutex2.unlock();
+			if(indices.overlap==rc){
+				go=true;
+			}
 		}
 	}
 	if(go){
@@ -419,12 +432,16 @@ vector<pair<kmer,uint>> Aligner::getNOverlap(const string& read, uint n){
 	kmer num(str2num(read.substr(0,k-1))),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
 	for(uint i(0);;++i){
 		hash=leftMPHF.lookup(rep);
-		if(leftIndices[hash].overlap==rep){
-			listOverlap.push_back({num,i});
-		}else{
-			hash=rightMPHF.lookup(rep);
-			if(rightIndices[hash].overlap==rep){
+		if(hash!=ULLONG_MAX){
+			if(leftIndices[hash].overlap==rep){
 				listOverlap.push_back({num,i});
+			}else{
+				hash=rightMPHF.lookup(rep);
+				if(hash!=ULLONG_MAX){
+					if(rightIndices[hash].overlap==rep){
+						listOverlap.push_back({num,i});
+					}
+				}
 			}
 		}
 		if(listOverlap.size()>=n){
