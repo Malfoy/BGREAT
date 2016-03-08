@@ -505,40 +505,43 @@ void Aligner::indexUnitigsAux(){
 	unitigs.push_back("");
 	string line;
 	unitigIndices indices;
-	vector<kmer> leftOver,rightOver;
-	while(!unitigFile.eof()){
-		getline(unitigFile,line);
-		getline(unitigFile,line);
-		if(line.size()<k){
-			break;
-		}else{
-			unitigs.push_back(line);
-			kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
-			if(beg<=rcBeg){
-				leftOver.push_back(beg);
+	uint leftsize,rightsize;
+	{
+		vector<kmer> leftOver,rightOver;
+		while(!unitigFile.eof()){
+			getline(unitigFile,line);
+			getline(unitigFile,line);
+			if(line.size()<k){
+				break;
 			}else{
-				rightOver.push_back(rcBeg);
-			}
-			kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
-			if(end<=rcEnd){
-				rightOver.push_back(end);
-			}else{
-				leftOver.push_back(rcEnd);
+				unitigs.push_back(line);
+				kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
+				if(beg<=rcBeg){
+					leftOver.push_back(beg);
+				}else{
+					rightOver.push_back(rcBeg);
+				}
+				kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
+				if(end<=rcEnd){
+					rightOver.push_back(end);
+				}else{
+					leftOver.push_back(rcEnd);
+				}
 			}
 		}
+		sort( leftOver.begin(), leftOver.end() );
+		leftOver.erase( unique( leftOver.begin(), leftOver.end() ), leftOver.end() );
+		sort( rightOver.begin(), rightOver.end() );
+		rightOver.erase( unique( rightOver.begin(), rightOver.end() ), rightOver.end() );
+		auto data_iterator = boomphf::range(static_cast<const kmer*>(&leftOver[0]), static_cast<const kmer*>(&leftOver[0]+leftOver.size()));
+		leftMPHF= boomphf::mphf<kmer,hasher>(leftOver.size(),data_iterator,coreNumber,gammaFactor,false);
+		auto data_iterator2 = boomphf::range(static_cast<const kmer*>(&rightOver[0]), static_cast<const kmer*>(&rightOver[0]+rightOver.size()));
+		rightMPHF= boomphf::mphf<kmer,hasher>(rightOver.size(),data_iterator2,coreNumber,gammaFactor,false);
+		leftsize=leftOver.size();
+		rightsize=rightOver.size();
 	}
-	sort( leftOver.begin(), leftOver.end() );
-	leftOver.erase( unique( leftOver.begin(), leftOver.end() ), leftOver.end() );
-	sort( rightOver.begin(), rightOver.end() );
-	rightOver.erase( unique( rightOver.begin(), rightOver.end() ), rightOver.end() );
-	auto data_iterator = boomphf::range(static_cast<const kmer*>(&leftOver[0]), static_cast<const kmer*>(&leftOver[0]+leftOver.size()));
-	leftMPHF= boomphf::mphf<kmer,hasher>(leftOver.size(),data_iterator,8,gammaFactor,false);
-	auto data_iterator2 = boomphf::range(static_cast<const kmer*>(&rightOver[0]), static_cast<const kmer*>(&rightOver[0]+rightOver.size()));
-	rightMPHF= boomphf::mphf<kmer,hasher>(rightOver.size(),data_iterator2,8,gammaFactor,false);
-	//TODO dessalocate leftover and right over
-	//TODO duplicate?
-	leftIndices.resize(leftOver.size(),{0,0,0,0,0});
-	rightIndices.resize(rightOver.size(),{0,0,0,0,0});
+	leftIndices.resize(leftsize,{0,0,0,0,0});
+	rightIndices.resize(rightsize,{0,0,0,0,0});
 	for(uint i(1);i<unitigs.size();++i){
 		line=unitigs[i];
 		kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
