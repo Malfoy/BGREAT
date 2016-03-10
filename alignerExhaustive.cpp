@@ -101,7 +101,6 @@ uint Aligner::mapOnRightEndExhaustive(const string &read, vector<uNumber>& path,
 			path.push_back(rangeUnitigs[miniMissIndice].second);
 			path.insert(path.end(), path2keep.begin(),path2keep.end());
 		}
-		successMR++;
 	}
 	return miniMiss;
 }
@@ -182,7 +181,6 @@ uint Aligner::checkBeginExhaustive(const string& read, pair<kmer, uint>& overlap
 				vector<uNumber> possiblePath;
 				miss+=mapOnLeftEndExhaustive(read, possiblePath, {overlapNum,overlap.second-(unitig.size()-k+1)},errors-miss);
 				if(miss<minMiss){
-					sucessML++;
 					minMiss=miss;
 					indiceMinMiss=i;
 					path2keep=possiblePath;

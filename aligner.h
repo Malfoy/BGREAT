@@ -64,7 +64,7 @@ public:
 	FILE * notMappedFilef;
 	MPHF leftMPHF,rightMPHF;
 	vector<unitigIndices> leftIndices,rightIndices;
-	atomic<uint> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps, successMR, successMR2, sucessML,iter;
+	atomic<uint> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps,iter;
 	uint k;
 	// unordered_map <kmer,vector<uint32_t>> right;
 	// unordered_map <kmer,vector<uint32_t>> left;
@@ -91,12 +91,12 @@ public:
 		coreNumber=cores;
 		errorsMax=errorsAllowed;
 		tryNumber=2;
-		gammaFactor=1;
+		gammaFactor=2;
 		fullMemory=true;
 		correctionMode=bcorrectionMode;
 		partial=bpartial;
 		fastq=bfastq;
-		alignedRead=readNumber=noOverlapRead=notAligned=unitigNumber=overlaps=successMR=successMR2=sucessML=0;
+		alignedRead=readNumber=noOverlapRead=notAligned=unitigNumber=overlaps=0;
 		offsetUpdate=1;
 		offsetUpdate<<=(2*(k-1));
 		iter=1;

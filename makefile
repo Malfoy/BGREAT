@@ -22,8 +22,6 @@ EXEC=bgreat  getLargeUnitigs
 all: $(EXEC)
 
 
-
-
 getLargeUnitigs: getLargeUnitigs.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
@@ -41,9 +39,6 @@ getBigUnitigs.o: getBigUnitigs.cpp
 
 bgreat.o: bgreat.cpp  aligner.h
 	$(CC) -o $@ -c $< $(CFLAGS)
-
-
-
 
 
 clean:

@@ -111,13 +111,11 @@ uint Aligner::coverGreedyPath(const string& read, const vector<pair<kmer,uint>>&
 	auto pair(mapOnRightPath(read,path,listOverlap[start],listOverlap,ended,start,errors));
 	if(pair.second<=errors){
 		if(ended){
-			successMR2++;
 			return pair.second;
 		}
 		if(pair.first>start){
 			uint errorrecur(coverGreedyPath(read, listOverlap, pair.first, end, path,errors-pair.second,ended));
 			if(errorrecur+pair.second<=errors){
-				successMR2++;
 				return errorrecur+pair.second;
 			};
 		}
@@ -172,7 +170,6 @@ uint Aligner::mapOnRightEndExhaustivePath(const string &read, vector<uNumber>& p
 			path.push_back(rangeUnitigs[miniMissIndice].second);
 			path.insert(path.end(), path2keep.begin(),path2keep.end());
 		}
-		successMR++;
 	}
 	return miniMiss;
 }
@@ -230,7 +227,7 @@ pair<uint,uint> Aligner::mapOnRightPath(const string &read, vector<uNumber>& pat
 		if(next>start){
 			return {next,miniMiss};
 		}
-		auto res(mapOnRight(read , path, {nextOverlapNum,overlap.second+(nextUnitig.size()-k+1)},listOverlap,ended,start, errors-miniMiss));
+		auto res(mapOnRightPath(read , path, {nextOverlapNum,overlap.second+(nextUnitig.size()-k+1)},listOverlap,ended,start, errors-miniMiss));
 		return {res.first,res.second+miniMiss};
 	}
 	return {start,errors+1};
@@ -388,7 +385,6 @@ uint Aligner::checkBeginExhaustivePath(const string& read, pair<kmer, uint>& ove
 					vector<uNumber> possiblePath;
 					miss+=mapOnLeftEndExhaustivePaths(read, possiblePath, {overlapNum,overlap.second-(unitig.size()-k+1)},errors-miss);
 					if(miss<minMiss){
-						sucessML++;
 						minMiss=miss;
 						indiceMinMiss=i;
 						path2keep=possiblePath;
