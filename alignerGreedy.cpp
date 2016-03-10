@@ -70,7 +70,6 @@ uint Aligner::mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, cons
 	kmer nextOverlap(0);
 	for(uint i(0); i<rangeUnitigs.size(); ++i){
 		unitig=(rangeUnitigs[i].first);
-
 		//case the rest of the read is too small
 		if(readLeft.size()+k-1 <= unitig.size()){
 			uint miss(missmatchNumber(unitig.substr(unitig.size()-readLeft.size()-k+1,readLeft.size()), readLeft, errors));
@@ -117,7 +116,7 @@ uint Aligner::mapOnRightEndGreedy(const string &read, vector<uNumber>& path, con
 	for(uint i(0); i<rangeUnitigs.size(); ++i){
 		unitig=(rangeUnitigs[i].first);
 		//case the rest of the read is too small
-		if(readLeft.size()<=unitig.size()){
+		if(readLeft.size()+k-1<=unitig.size()){
 			uint miss(missmatchNumber(unitig.substr(0,readLeft.size()), readLeft, errors));
 			if(miss<miniMiss){
 				miniMiss=miss;
@@ -225,7 +224,6 @@ uint Aligner::checkEndGreedy(const string& read, pair<kmer, uint>& overlap, vect
 			}
 		}
 	}
-
 	if(minMiss<=errors){
 		path.push_back(rangeUnitigs[indiceMinMiss].second);
 		if(ended){return minMiss;}
@@ -257,10 +255,7 @@ void Aligner::alignPartGreedy(){
 			}
 			if(path.size()!=0){
 				if(correctionMode){
-				//if(true){
 					corrected=(recoverPath(path,read.size()));
-					// pathFile<<header<<'\n';
-					// pathFile<<corrected<<'\n';
 					header+='\n'+corrected+'\n';
 					pathMutex.lock();
 					{
@@ -268,7 +263,6 @@ void Aligner::alignPartGreedy(){
 					}
 					pathMutex.unlock();
 			}else{
-					// pathFile<<header<<'\n';
 					header+='\n'+printPath(path);;
 					pathMutex.lock();
 					{
@@ -287,11 +281,7 @@ void Aligner::alignPartGreedy(){
 					header+='\n'+read+'\n';
 					notMappedMutex.lock();
 					{
-						// notMappedFile<<header<<'\n'<<read<<'\n';
-
 						fwrite(header.c_str(), sizeof(char), header.size(), notMappedFilef);
-						// notMappedFile<<readNumber<<'\n';
-						// cout<<header<<'\n'<<read<<'\n';
 					}
 					notMappedMutex.unlock();
 				}

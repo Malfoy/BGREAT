@@ -81,11 +81,11 @@ public:
 	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
-		pathFile.open(paths);
+		// pathFile.open(paths);
 		pathFilef=fopen(paths.c_str(),"wb");
 		notMappedFilef=fopen(notMapped.c_str(),"wb");
 		// noOverlapFile.open(noOverlaps);
-		notMappedFile.open(notMapped);
+		// notMappedFile.open(notMapped);
 		// notMappedFile.open(notMapped,ios::binary);
 		k=kValue;
 		coreNumber=cores;
