@@ -83,9 +83,6 @@ int main(int argc, char ** argv){
 			case 'f':
 				pathFile=(optarg);
 			break;
-			case 'o':
-				noOverlapFile=(optarg);
-			break;
 			case 'a':
 				notAlignedFile=(optarg);
 			break;
@@ -105,7 +102,7 @@ int main(int argc, char ** argv){
 		}
 	}
 	 if(reads!=""){
-               	Aligner supervisor(unitigs,pathFile,noOverlapFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode);
+               	Aligner supervisor(unitigs,pathFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode);
                	supervisor.indexUnitigs();
 				// supervisor.knowNeighbour();
                	supervisor.alignAll(!brute,reads);

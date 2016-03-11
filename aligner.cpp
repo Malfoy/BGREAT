@@ -21,7 +21,6 @@
 *****************************************************************************/
 
 
-
 #include "aligner.h"
 #include "utils.h"
 #include "alignerPaths.cpp"
@@ -139,47 +138,11 @@ string Aligner::num2str(kmer num){
 		}
 		num>>=2;
 	}
-	reverse( str.begin(), str.end());
+	reverse( str.begin(), str.begin());
 	return str;
 }
 
 
-// vector<pair<string,uNumber>> Aligner::getEnd(kmer bin){
-// 	vector<pair<string,uNumber>> result;
-// 	kmer rc(rcb(bin,k-1));
-// 	string unitig;
-// 	uNumber num;
-// 	if(bin<=rc){
-// 		if(right.count(bin)!=0){
-// 			for(uint i(0); i<right[bin].size(); ++i){
-// 				num=right[bin][i];
-// 				unitig=(getUnitig(num));
-// 				if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
-// 					result.push_back({unitig,num});
-// 				}else{
-// 					result.push_back({reverseComplements(unitig),-num});
-// 				}
-// 			}
-// 		}else{
-// 			return {};
-// 		}
-// 	}else{
-// 		if(left.count(rc)!=0){
-// 			for(uint i(0); i<left[rc].size(); ++i){
-// 				num=left[rc][i];
-// 				unitig=(getUnitig(num));
-// 				if(str2num(unitig.substr(unitig.size()-k+1,k-1))==bin){
-// 					result.push_back({unitig,num});
-// 				}else{
-// 					result.push_back({reverseComplements(unitig),-num});
-// 				}
-// 			}
-// 		}else{
-// 			return {};
-// 		}
-// 	}
-// 	return result;
-// }
 //TODO replace vector by struct
 vector<pair<string,uNumber>> Aligner::getEnd(kmer bin){
 	vector<pair<string,uNumber>> result;
@@ -196,15 +159,10 @@ vector<pair<string,uNumber>> Aligner::getEnd(kmer bin){
 				go=true;
 			}
 		}
-
-		// unitigMutex2.unlock();
-
 	}else{
-		// unitigMutex.lock();
 		uint64_t hash=leftMPHF.lookup(rc);
 		if(hash!=ULLONG_MAX){
 			indices=leftIndices[hash];
-		// unitigMutex.unlock();
 			if(indices.overlap==rc){
 				go=true;
 			}
@@ -255,21 +213,17 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 	unitigIndices indices;
 	bool go(false);
 	if(bin<=rc){
-		// unitigMutex.lock();
 		uint64_t hash=leftMPHF.lookup(bin);
 		if(hash!=ULLONG_MAX){
 			indices=leftIndices[hash];
-		// unitigMutex.unlock();
 			if(indices.overlap==bin){
 				go=true;
 			}
 		}
 	}else{
-		// unitigMutex2.lock();
 		uint64_t hash=rightMPHF.lookup(rc);
 		if(hash!=ULLONG_MAX){
 			indices=rightIndices[hash];
-			// unitigMutex2.unlock();
 			if(indices.overlap==rc){
 				go=true;
 			}
@@ -311,42 +265,6 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 	}
 	return result;
 }
-
-
-// //TODO can count be removed with the use of at ?
-// vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
-// 	vector<pair<string,uNumber>> result;
-// 	kmer rc(rcb(bin,k-1));
-// 	string unitig;
-// 	if(bin<=rc){
-// 		if(left.count(bin)!=0){
-// 			for(uint i(0); i<left[bin].size(); ++i){
-// 				unitig=(getUnitig(left.at(bin)[i]));
-// 				if(str2num(unitig.substr(0,k-1))==bin){
-// 					result.push_back({unitig,left.at(bin)[i]});
-// 				}else{
-// 					result.push_back({reverseComplements(unitig),-left.at(bin)[i]});
-// 				}
-// 			}
-// 		}else{
-// 			return {};
-// 		}
-// 	}else{
-// 		if(right.count(rc)!=0){
-// 			for(uint i(0); i<right[rc].size(); ++i){
-// 				unitig=(getUnitig(right.at(rc)[i]));
-// 				if(str2num(unitig.substr(0,k-1))==bin){
-// 					result.push_back({unitig,right.at(rc)[i]});
-// 				}else{
-// 					result.push_back({reverseComplements(unitig),-right.at(rc)[i]});
-// 				}
-// 			}
-// 		}else{
-// 			return {};
-// 		}
-// 	}
-// 	return result;
-// }
 
 
 string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
@@ -398,13 +316,6 @@ vector<pair<kmer,uint>> Aligner::getListOverlap(const string& read){
 	kmer num(str2num(overlap)),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
 	uint64_t hash;
 	for(uint i(0);;++i){
-		// if(left.count(rep)!=0){
-		// 	listOverlap.push_back({num,i});
-		// }else{
-		// 	if(right.count(rep)!=0){
-		// 		listOverlap.push_back({num,i});
-		// 	}
-		// }
 		hash=leftMPHF.lookup(rep);
 		if(true){//TODO test if is a true overlap
 			listOverlap.push_back({num,i});
@@ -431,16 +342,19 @@ vector<pair<kmer,uint>> Aligner::getNOverlap(const string& read, uint n){
 	uint64_t hash;
 	kmer num(str2num(read.substr(0,k-1))),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
 	for(uint i(0);;++i){
+		bool done(false);
 		hash=leftMPHF.lookup(rep);
 		if(hash!=ULLONG_MAX){
 			if(leftIndices[hash].overlap==rep){
 				listOverlap.push_back({num,i});
-			}else{
-				hash=rightMPHF.lookup(rep);
-				if(hash!=ULLONG_MAX){
-					if(rightIndices[hash].overlap==rep){
-						listOverlap.push_back({num,i});
-					}
+				done=true;
+			}
+		}
+		if(not done){
+			hash=rightMPHF.lookup(rep);
+			if(hash!=ULLONG_MAX){
+				if(rightIndices[hash].overlap==rep){
+					listOverlap.push_back({num,i});
 				}
 			}
 		}
@@ -459,87 +373,46 @@ vector<pair<kmer,uint>> Aligner::getNOverlap(const string& read, uint n){
 }
 
 
-
-// void Aligner::indexUnitigsAux(){
-// 	uint position(0),count(0);
-// 	string line, overlap1, overlap2, waste;
-// 	// unitigs.push_back({"",{0,0,0,0},{0,0,0,0}});
-// 	unitigs.push_back("");
-// 	while(!unitigFile.eof()){
-// 		if(!fullMemory){
-// 			position=unitigFile.tellg();
-// 		}
-// 		getline(unitigFile,line);
-// 		getline(unitigFile,line);
-// 		// unitigFile.seekg(1, ios::cur);
-// 		// transform(line.begin(), line.end(), line.begin(), ::toupper);
-// 		if(line.size()<k){
-// 			break;
-// 		}else{
-// 			if(++count%1000000==0){cout<<count/1000000<<"M unitigs treated"<<endl;}
-// 			if(fullMemory){
-// 				// unitigs.push_back({line,{0,0,0,0},{0,0,0,0}});
-// 				// cout<<line<<endl;
-// 				unitigs.push_back(line);
-// 				position=unitigs.size()-1;
-// 			}
-// 			++unitigNumber;
-//
-// 			kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
-// 			if(beg<=rcBeg){
-// 				left[(beg)].push_back(position);
-// 			}else{
-// 				right[(rcBeg)].push_back(position);
-// 			}
-// 			kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
-// 			if(end<=rcEnd){
-// 				right[(end)].push_back(position);
-// 			}else{
-// 				left[(rcEnd)].push_back(position);
-// 			}
-// 		}
-// 	}
-// }
-
 void Aligner::indexUnitigsAux(){
 	unitigs.push_back("");
 	string line;
 	unitigIndices indices;
 	uint leftsize,rightsize;
-	{
-		vector<kmer> leftOver,rightOver;
-		while(!unitigFile.eof()){
-			getline(unitigFile,line);
-			getline(unitigFile,line);
-			if(line.size()<k){
-				break;
+	vector<kmer>* leftOver=new std::vector<kmer>;
+	vector<kmer>* rightOver=new std::vector<kmer>;;
+	while(!unitigFile.eof()){
+		getline(unitigFile,line);
+		getline(unitigFile,line);
+		if(line.size()<k){
+			break;
+		}else{
+			unitigs.push_back(line);
+			kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
+			if(beg<=rcBeg){
+				leftOver->push_back(beg);
 			}else{
-				unitigs.push_back(line);
-				kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
-				if(beg<=rcBeg){
-					leftOver.push_back(beg);
-				}else{
-					rightOver.push_back(rcBeg);
-				}
-				kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
-				if(end<=rcEnd){
-					rightOver.push_back(end);
-				}else{
-					leftOver.push_back(rcEnd);
-				}
+				rightOver->push_back(rcBeg);
+			}
+			kmer end(str2num(line.substr(line.size()-k+1,k-1))),rcEnd(rcb(end,k-1));
+			if(end<=rcEnd){
+				rightOver->push_back(end);
+			}else{
+				leftOver->push_back(rcEnd);
 			}
 		}
-		sort( leftOver.begin(), leftOver.end() );
-		leftOver.erase( unique( leftOver.begin(), leftOver.end() ), leftOver.end() );
-		sort( rightOver.begin(), rightOver.end() );
-		rightOver.erase( unique( rightOver.begin(), rightOver.end() ), rightOver.end() );
-		auto data_iterator = boomphf::range(static_cast<const kmer*>(&leftOver[0]), static_cast<const kmer*>(&leftOver[0]+leftOver.size()));
-		leftMPHF= boomphf::mphf<kmer,hasher>(leftOver.size(),data_iterator,coreNumber,gammaFactor,false);
-		auto data_iterator2 = boomphf::range(static_cast<const kmer*>(&rightOver[0]), static_cast<const kmer*>(&rightOver[0]+rightOver.size()));
-		rightMPHF= boomphf::mphf<kmer,hasher>(rightOver.size(),data_iterator2,coreNumber,gammaFactor,false);
-		leftsize=leftOver.size();
-		rightsize=rightOver.size();
 	}
+	sort( leftOver->begin(), leftOver->end() );
+	leftOver->erase( unique( leftOver->begin(), leftOver->end() ), leftOver->end() );
+	sort( rightOver->begin(), rightOver->end() );
+	rightOver->erase( unique( rightOver->begin(), rightOver->end() ), rightOver->end() );
+	auto data_iterator = boomphf::range(static_cast<const kmer*>(&((*leftOver)[0])), static_cast<const kmer*>((&(*leftOver)[0])+leftOver->size()));
+	leftMPHF= boomphf::mphf<kmer,hasher>(leftOver->size(),data_iterator,coreNumber,gammaFactor,false);
+	leftsize=leftOver->size();
+	delete leftOver;
+	auto data_iterator2 = boomphf::range(static_cast<const kmer*>(&(*rightOver)[0]), static_cast<const kmer*>((&(*rightOver)[0])+rightOver->size()));
+	rightMPHF= boomphf::mphf<kmer,hasher>(rightOver->size(),data_iterator2,coreNumber,gammaFactor,false);
+	rightsize=rightOver->size();
+	delete rightOver;
 	leftIndices.resize(leftsize,{0,0,0,0,0});
 	rightIndices.resize(rightsize,{0,0,0,0,0});
 	for(uint i(1);i<unitigs.size();++i){
@@ -551,10 +424,8 @@ void Aligner::indexUnitigsAux(){
 			if(indices.indice1==0){
 				indices.indice1=i;
 			}else if(indices.indice2==0){
-				// cout<<2<<endl;
 				indices.indice2=i;
 			}else if(indices.indice3==0){
-					// cout<<3<<endl;
 				indices.indice3=i;
 			}else{
 				indices.indice4=i;
@@ -566,10 +437,8 @@ void Aligner::indexUnitigsAux(){
 			if(indices.indice1==0){
 				indices.indice1=i;
 			}else if(indices.indice2==0){
-					// cout<<2<<endl;
 				indices.indice2=i;
 			}else if(indices.indice3==0){
-					// cout<<3<<endl;
 				indices.indice3=i;
 			}else{
 				indices.indice4=i;
@@ -583,10 +452,8 @@ void Aligner::indexUnitigsAux(){
 			if(indices.indice1==0){
 				indices.indice1=i;
 			}else if(indices.indice2==0){
-					// cout<<2<<endl;
 				indices.indice2=i;
 			}else if(indices.indice3==0){
-					// cout<<3<<endl;
 				indices.indice3=i;
 			}else{
 				indices.indice4=i;
@@ -598,10 +465,8 @@ void Aligner::indexUnitigsAux(){
 			if(indices.indice1==0){
 				indices.indice1=i;
 			}else if(indices.indice2==0){
-					// cout<<2<<endl;
 				indices.indice2=i;
 			}else if(indices.indice3==0){
-					// cout<<3<<endl;
 				indices.indice3=i;
 			}else{
 				indices.indice4=i;
@@ -682,9 +547,6 @@ string Aligner::printPath(const vector<int32_t>& path){
 		res+=to_string(path[i]);
 		res+='.';
 	}
-	// *file<<'\n';
-
-	// pathFile<<pathToWrite<<'\n';
 	res+='\n';
 	return res;
 }

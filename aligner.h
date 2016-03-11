@@ -78,7 +78,7 @@ public:
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory,correctionMode;
 
-	Aligner(const string& Unitigs, const string& paths, const string& noOverlaps, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode){
+	Aligner(const string& Unitigs, const string& paths, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
 		// pathFile.open(paths);
@@ -90,7 +90,7 @@ public:
 		k=kValue;
 		coreNumber=cores;
 		errorsMax=errorsAllowed;
-		tryNumber=2;
+		tryNumber=3;
 		gammaFactor=2;
 		fullMemory=true;
 		correctionMode=bcorrectionMode;
