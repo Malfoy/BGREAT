@@ -54,6 +54,7 @@ uint8_t missmatchNumber(const string& seq1, const string& seq2, unsigned int n);
 string compactionEnd(const string& seq1,const string& seq2, uint k);
 kmer rcb(kmer min,uint n);
 string reverseComplements(const string& s);
+string getRepresent(const string& s);
 void initRc();
 
 

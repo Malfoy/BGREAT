@@ -58,6 +58,10 @@ char revCompChar(char c) {
 	return 'A';
 }
 
+string getRepresent(const string& s){
+	return min(s,reverseComplements(s));
+}
+
 
 string reverseComplements(const string& s){
 	string rc(s.size(),0);
@@ -118,7 +122,7 @@ kmer str2num(const string& str){
 			case 'A':res+=0;break;
 			case 'C':res+=1;break;
 			case 'G':res+=2;break;
-			case 'T':res+=3;break;
+			default:res+=3;break;
 		}
 	}
 	return res;

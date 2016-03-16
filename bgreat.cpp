@@ -62,8 +62,9 @@ int main(int argc, char ** argv){
 	int threads(1);
 	int ka(31);
 	int c;
+	int effort(2);
 	bool brute(false),incomplete(false),fastq(false),pathOption(false),correctionMode(false);
-	while ((c = getopt (argc, argv, "r:k:g:m:t:f:o:a:biqpc")) != -1){
+	while ((c = getopt (argc, argv, "r:k:g:m:t:e:f:o:a:biqpc")) != -1){
 	switch(c){
 		case 'r':
 			reads=optarg;
@@ -79,6 +80,9 @@ int main(int argc, char ** argv){
 			break;
 			case 't':
 				threads=stoi(optarg);
+			break;
+			case 'e':
+				effort=stoi(optarg);
 			break;
 			case 'f':
 				pathFile=(optarg);
@@ -102,7 +106,7 @@ int main(int argc, char ** argv){
 		}
 	}
 	 if(reads!=""){
-               	Aligner supervisor(unitigs,pathFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode);
+               	Aligner supervisor(unitigs,pathFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode,effort);
                	supervisor.indexUnitigs();
 				// supervisor.knowNeighbour();
                	supervisor.alignAll(!brute,reads);
@@ -112,10 +116,13 @@ int main(int argc, char ** argv){
               	<<"-g unitig_file (unitig.dot)"<<endl
               	<<"-m n_missmatch (2)"<<endl
               	<<"-t n_thread (1)"<<endl
+				<<"-e effort put in mapping (2)"<<endl
               	<<"-f path_file (paths)"<<endl
               	<<"-o no_overlap_file (noOverlap.fa)"<<endl
               	<<"-a not_aligned_file (notAligned.fa)"<<endl
               	<<"-p to align on paths instead of walks"<<endl
-              	<<"-q for fastq read file"<<endl;
+              	<<"-q for fastq read file"<<endl
+				<<"-c to output corrected reads"<<endl;
+
         }
 }

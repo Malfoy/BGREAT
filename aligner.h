@@ -78,7 +78,7 @@ public:
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory,correctionMode;
 
-	Aligner(const string& Unitigs, const string& paths, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode){
+	Aligner(const string& Unitigs, const string& paths, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode,uint effort){
 		unitigFileName=Unitigs;
 		unitigFile.open(unitigFileName);
 		// pathFile.open(paths);
@@ -90,7 +90,7 @@ public:
 		k=kValue;
 		coreNumber=cores;
 		errorsMax=errorsAllowed;
-		tryNumber=3;
+		tryNumber=effort;
 		gammaFactor=2;
 		fullMemory=true;
 		correctionMode=bcorrectionMode;
@@ -123,7 +123,7 @@ public:
 	string getUnitig(int position);
 	string getUnitigFile(uint position);
 	void getReads(vector<pair<string,string>>& reads, uint n);
-	vector<uNumber> alignReadGreedy(const string& read, bool& overlapFound, uint errors,bool rc);
+	vector<uNumber> alignReadGreedy(const string& read, bool& overlapFound, uint errors,bool& rc);
 	uint checkBeginExhaustive(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors);
 	uint checkPair(const pair<kmer, uint>& overlap1, const pair<kmer, uint>& overlap2, const string& read,uNumber& path,uint errorsAllowed);
 	uint coverGreedy(const string& read, const vector<pair<kmer,uint>>& listOverlap, const uint start, uint end, vector<uNumber>& path, uint  errors, bool&);
