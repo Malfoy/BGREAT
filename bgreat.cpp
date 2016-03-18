@@ -116,9 +116,10 @@ int main(int argc, char ** argv){
               	<<"-m n_missmatch (2)"<<endl
               	<<"-t n_thread (1)"<<endl
               	<<"-f path_file (paths)"<<endl
-              	<<"-o no_overlap_file (noOverlap.fa)"<<endl
+                <<"-o no_overlap_file (noOverlap.fa)"<<endl // Depreciated ??
               	<<"-a not_aligned_file (notAligned.fa)"<<endl
               	<<"-p to align on paths instead of walks"<<endl
               	<<"-q for fastq read file"<<endl;
+                <<"-c for correction mode"<<endl;
         }
 }
