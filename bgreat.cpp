@@ -63,8 +63,8 @@ int main(int argc, char ** argv){
 	int ka(31);
 	int c;
 	int effort(2);
-	bool brute(false),incomplete(false),fastq(false),pathOption(false),correctionMode(false);
-	while ((c = getopt (argc, argv, "r:k:g:m:t:e:f:o:a:biqpc")) != -1){
+	bool brute(false),incomplete(false),fastq(false),pathOption(false),correctionMode(false),dogMode(false);
+	while ((c = getopt (argc, argv, "r:k:g:m:t:e:f:o:a:biqpcG")) != -1){
 	switch(c){
 		case 'r':
 			reads=optarg;
@@ -99,6 +99,9 @@ int main(int argc, char ** argv){
 			case 'q':
 				fastq=(true);
 			break;
+			case 'G':
+				dogMode=(true);
+			break;
 			case 'c':
 				correctionMode=true;
 				// pathFile="corrected.fa";
@@ -106,7 +109,7 @@ int main(int argc, char ** argv){
 		}
 	}
 	 if(reads!=""){
-               	Aligner supervisor(unitigs,pathFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode,effort);
+               	Aligner supervisor(unitigs,pathFile,notAlignedFile,ka,threads,errors,incomplete,fastq,pathOption,correctionMode,effort,dogMode);
                	supervisor.indexUnitigs();
 				// supervisor.knowNeighbour();
                	supervisor.alignAll(!brute,reads);

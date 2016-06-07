@@ -57,7 +57,7 @@ struct unitigIndices{
 
 class Aligner{
 public:
-	bool partial,fastq,pathOption;
+	bool partial,fastq,pathOption,dogMode;
 	ifstream unitigFile, readFile;
 	ofstream pathFile, noOverlapFile, notMappedFile;
 	FILE * pathFilef;
@@ -77,8 +77,9 @@ public:
 	chrono::system_clock::time_point startChrono;
 	bool fullMemory,correctionMode;
 
-	Aligner(const string& Unitigs, const string& paths, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode,uint effort){
+	Aligner(const string& Unitigs, const string& paths, const string& notMapped, uint kValue, unsigned char cores,unsigned int errorsAllowed, bool bpartial,bool bfastq,bool bpath,bool bcorrectionMode,uint effort,bool mode){
 		unitigFileName=Unitigs;
+		dogMode=mode;
 		unitigFile.open(unitigFileName);
 		// pathFile.open(paths);
 		pathFilef=fopen(paths.c_str(),"wb");

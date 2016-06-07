@@ -50,7 +50,7 @@ string mutate(string& read, int n);
 kmer str2num(const string& str);
 kmer nuc2int(char c);
 kmer nuc2intrc(char c);
-uint8_t missmatchNumber(const string& seq1, const string& seq2, unsigned int n);
+uint missmatchNumber(const string& seq1, const string& seq2, unsigned int n);
 string compactionEnd(const string& seq1,const string& seq2, uint k);
 kmer rcb(kmer min,uint n);
 string reverseComplements(const string& s);

@@ -376,19 +376,19 @@ vector<pair<kmer,uint>> Aligner::getNOverlap(const string& read, uint n){
 vector<pair<pair<uint,uint>,uint>> Aligner::getNAnchors(const string& read,uint n){
 	vector<pair<pair<uint,uint>,uint>> list;
 	uint64_t hash;
-	kmer num(str2num(read.substr(0,k-1))),rcnum(rcb(num,k-1)), rep(min(num, rcnum));
+	kmer num(str2num(read.substr(0,k))),rcnum(rcb(num,k)), rep(min(num, rcnum));
 	for(uint i(0);;++i){
-		bool done(false);
 		hash=anchorsMPHF.lookup(rep);
-		if(hash!=ULLONG_MAX){
+		if(hash<anchorsPosition.size()){
+			//TODO what happend here ???....
 			list.push_back({anchorsPosition[hash],i});
 		}
 		if(list.size()>=n){
 			return list;
 		}
-		if(i+k-1<read.size()){
-			update(num,read[i+k-1]);
-			updateRC(rcnum,read[i+k-1]);
+		if(i+k<read.size()){
+			update(num,read[i+k]);
+			updateRC(rcnum,read[i+k]);
 			rep=(min(num, rcnum));
 		}else{
 			return list;
@@ -424,11 +424,13 @@ void Aligner::indexUnitigsAux(){
 			}else{
 				leftOver->push_back(rcEnd);
 			}
-			for(uint j(0);j+k<line.size();++j){
-				if(j%fracKmer==0){
-					//TODO remove substr
-					kmer seq(str2num(line.substr(j,k))),rcSeq(rcb(seq,k)),canon(min(seq,rcSeq));
-					anchors->push_back(canon);
+			if(dogMode){
+				for(uint j(0);j+k<line.size();++j){
+					if(j%fracKmer==0){
+						//TODO remove substr
+						kmer seq(str2num(line.substr(j,k))),rcSeq(rcb(seq,k)),canon(min(seq,rcSeq));
+						anchors->push_back(canon);
+					}
 				}
 			}
 		}
@@ -445,8 +447,10 @@ void Aligner::indexUnitigsAux(){
 	rightMPHF= boomphf::mphf<kmer,hasher>(rightOver->size(),data_iterator2,coreNumber,gammaFactor,false);
 	rightsize=rightOver->size();
 	delete rightOver;
-	auto data_iterator3 = boomphf::range(static_cast<const kmer*>(&(*anchors)[0]), static_cast<const kmer*>((&(*anchors)[0])+anchors->size()));
-	anchorsMPHF= boomphf::mphf<kmer,hasher>(anchors->size(),data_iterator3,coreNumber,gammaFactor,false);
+	if(dogMode){
+		auto data_iterator3 = boomphf::range(static_cast<const kmer*>(&(*anchors)[0]), static_cast<const kmer*>((&(*anchors)[0])+anchors->size()));
+		anchorsMPHF= boomphf::mphf<kmer,hasher>(anchors->size(),data_iterator3,coreNumber,gammaFactor,false);
+	}
 	anchorSize=anchors->size();
 	delete anchors;
 	leftIndices.resize(leftsize,{0,0,0,0,0});
@@ -454,13 +458,15 @@ void Aligner::indexUnitigsAux(){
 	anchorsPosition.resize(anchorSize,{0,0});
 	for(uint i(1);i<unitigs.size();++i){
 		line=unitigs[i];
-		for(uint j(0);j+k<line.size();++j){
+		if(dogMode){
+			for(uint j(0);j+k<line.size();++j){
 				if(j%fracKmer==0){
 					//TODO remove substr
 					kmer seq(str2num(line.substr(j,k))),rcSeq(rcb(seq,k)),canon(min(seq,rcSeq));
 					anchorsPosition[anchorsMPHF.lookup(canon)]={i,j};
 				}
 			}
+		}
 		kmer beg(str2num(line.substr(0,k-1))),rcBeg(rcb(beg,k-1));
 		if(beg<=rcBeg){
 			indices=leftIndices[leftMPHF.lookup(beg)];

@@ -1,7 +1,7 @@
 # CC=/usr/bin/g++
 CC=g++
-#CC=clang++
-CFLAGS=  -Wall  -Ofast -std=c++11 -march=native -flto -Wfatal-errors -pipe -funit-at-a-time -fomit-frame-pointer
+#~ CC=clang++
+CFLAGS=  -Wall  -Ofast -std=c++11 -march=native -flto -pipe -funit-at-a-time -fomit-frame-pointer   -Wfatal-errors
 LDFLAGS=-flto -lpthread
 
 

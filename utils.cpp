@@ -151,21 +151,25 @@ kmer nuc2intrc(char c){
 }
 
 
-uint8_t missmatchNumber(const string& seq1, const string& seq2, unsigned int n){
-	uint8_t miss(0);
-	for(size_t i(0); i<seq2.size(); ++i){
+uint missmatchNumber(const string& seq1, const string& seq2, unsigned int n){
+	//~ cout<<9;
+	uint miss(0);
+	for(uint i(0); i<seq2.size(); ++i){
+		//~ cout<<i<<"lol";
 		if(seq2[i]!=seq1[i]){
 			if(++miss>n){
+				//~ cout<<8;
 				return miss;
 			}
 		}
 	}
+	//~ cout<<7;
 	return miss;
 }
 
 
 string compactionEnd(const string& seq1,const string& seq2, uint k){
-	size_t s1(seq1.size()),s2(seq2.size());
+	uint s1(seq1.size()),s2(seq2.size());
 	if(s1==0 or s2==0){return "";}
 	string rc2(reverseComplements(seq2)),end1(seq1.substr(s1-k,k)), beg2(seq2.substr(0,k));
 	if(end1==beg2){return seq1+(seq2.substr(k));}
