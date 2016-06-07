@@ -57,6 +57,87 @@ vector<uNumber> Aligner::alignReadGreedy(const string& read, bool& overlapFound,
 }
 
 
+vector<uNumber> Aligner::alignReadGreedyAnchors(const string& read, bool& overlapFound, uint errorMax, bool& rc){
+	vector<pair<pair<uint,uint>,uint>> listAnchors(getNAnchors(read,tryNumber));
+	if(listAnchors.empty()){++noOverlapRead;return {};}
+	overlapFound=true;
+	vector<uNumber> pathBegin,pathEnd;
+	for(uint start(0); start<(uint)listAnchors.size(); ++start){
+		uint unitigNumber(listAnchors[start].first.first),positionUnitig(listAnchors[start].first.second),positionRead(listAnchors[start].second);
+		string unitig(unitigs[unitigNumber]);
+		if(positionRead>=positionUnitig){
+			if(read.size()-positionRead>unitig.size()-positionUnitig){
+				
+				//CASE 1 : unitig included in read
+				cout<<1<<endl;
+				uint errors(missmatchNumber(read.substr(positionRead-positionUnitig,unitig.size()),unitig,errorMax));
+				if(errors<errorMax){
+					pathBegin={};
+					uint errorBegin(checkBeginGreedy(read,{getRepresentNum(unitig.substr(0,k-1)),positionRead-positionUnitig},pathBegin,errorMax-errors));
+					if(errorBegin+errors<=errorMax){
+						pathEnd={unitigNumber};
+						uint errorsEnd(checkEndGreedy(read,{getRepresentNum(unitig.substr(unitig.size()-k+1,k-1)),positionRead-positionUnitig+unitig.size()-k+1},pathEnd,errorMax-errors-errorBegin));
+						if(errorBegin+errors+errorsEnd<=errorMax){
+							++alignedRead;
+							reverse(pathBegin.begin(),pathBegin.end());
+							pathBegin.insert(pathBegin.end(), pathEnd.begin(),pathEnd.end());
+							return pathBegin;
+						}
+					}
+				}
+			}else{
+				
+				//CASE 2 : unitig overap read
+				cout<<2<<endl;
+				uint errors(missmatchNumber(read.substr(positionRead-positionUnitig),unitig.substr(0,read.size()-positionRead+positionUnitig),errorMax));
+				if(errors<errorMax){
+					pathBegin={};
+					uint errorBegin(checkBeginGreedy(read,{getRepresentNum(unitig.substr(0,k-1)),positionRead-positionUnitig},pathBegin,errorMax-errors));
+					if(errorBegin+errors<=errorMax){
+						++alignedRead;
+						pathBegin.insert(pathBegin.end(), pathEnd.begin(),pathEnd.end());
+						pathBegin.push_back(unitigNumber);
+						return pathBegin;
+					}
+				}
+			}
+		}else{
+			if(read.size()-positionRead>unitig.size()-positionUnitig){
+				
+				//CASE 3 : read overlap unitig
+				cout<<3<<endl;
+				uint errors(missmatchNumber(unitig.substr(positionUnitig-positionRead),read.substr(0,unitig.size()+positionRead-positionUnitig),errorMax));
+				if(errors<errorMax){
+					pathEnd={unitigNumber};
+					uint errorsEnd(checkEndGreedy(read,{getRepresentNum(unitig.substr(unitig.size()-k+1,k-1)),positionRead-positionUnitig+unitig.size()-k+1},pathEnd,errorMax-errors));
+					if(errors+errorsEnd<=errorMax){
+						++alignedRead;
+						return pathEnd;
+					}
+				}
+			}else{
+				
+				//CASE 4 : read included in unitig
+				cout<<4<<endl;
+				uint errors(missmatchNumber(unitig.substr(positionUnitig-positionRead,read.size()),read,errorMax));
+				
+				if(errors<=errorMax){
+					++alignedRead;
+					return {unitigNumber};
+				}
+				cout<<unitig.substr(positionUnitig-positionRead,read.size())<<endl;
+				cout<<read<<endl;
+			}
+		}
+		
+	}
+	if(!rc){rc=true;return alignReadGreedyAnchors(reverseComplements(read), overlapFound,errorMax, rc);}
+	++notAligned;
+	cin.get();
+	return {};
+}
+
+
 uint Aligner::mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint errors){
 	if(overlap.second==0){path.push_back(0);return 0;}
 	string unitig,readLeft(read.substr(0,overlap.second)),nextUnitig;
@@ -158,7 +239,7 @@ uint Aligner::mapOnRightEndGreedy(const string &read, vector<uNumber>& path, con
 }
 
 
-uint Aligner::checkBeginGreedy(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors){
+uint Aligner::checkBeginGreedy(const string& read,const pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors){
 	if(overlap.second==0){path.push_back(0);return 0;}
 	string readLeft(read.substr(0,overlap.second)),unitig,nextUnitig;
 	auto rangeUnitigs(getEnd(overlap.first));
@@ -212,7 +293,7 @@ uint Aligner::checkBeginGreedy(const string& read, pair<kmer, uint>& overlap, ve
 }
 
 
-uint Aligner::checkEndGreedy(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors){
+uint Aligner::checkEndGreedy(const string& read,const pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors){
 	string readLeft(read.substr(overlap.second+k-1)),unitig,nextUnitig;
 	if(readLeft.empty()){return 0;}
 	auto rangeUnitigs(getBegin(overlap.first));
@@ -277,7 +358,9 @@ void Aligner::alignPartGreedy(){
 			if(pathOption){
 				path=alignReadGreedyPath(read,overlapFound,errorsMax,rc);
 			}else{
-				path=alignReadGreedy(read,overlapFound,errorsMax,rc);
+				cout<<"go"<<endl;
+				path=alignReadGreedyAnchors(read,overlapFound,errorsMax,rc);
+				//~ path=alignReadGreedy(read,overlapFound,errorsMax,rc);
 			}
 			if(path.size()!=0){
 				if(correctionMode){
@@ -285,12 +368,6 @@ void Aligner::alignPartGreedy(){
 					if(rc){
 						corrected=reverseComplements(corrected);
 					}
-					// if(missmatchNumber(corrected,read,10)>2){
-					// 	cout<<getRepresent(corrected)<<endl;
-					// 	cout<<getRepresent(read)<<endl;
-					// 	cout<<"wtf"<<endl;
-					// 	exit(0);
-					// }
 					header+='\n'+corrected+'\n';
 					pathMutex.lock();
 					{
@@ -322,16 +399,5 @@ void Aligner::alignPartGreedy(){
 				}
 			}
 		}
-		// if(iter++%10==0){
-		// 	cout<<"Read : "<<readNumber<<endl;
-		// 	cout<<"No Overlap : "<<noOverlapRead<<" Percent : "<<(100*float(noOverlapRead))/readNumber<<endl;
-		// 	cout<<"Got Overlap : "<<alignedRead+notAligned<<" Percent : "<<(100*float(alignedRead+notAligned))/readNumber<<endl;
-		// 	cout<<"Overlap and Aligned : "<<alignedRead<<" Percent : "<<(100*float(alignedRead))/(alignedRead+notAligned)<<endl;
-		// 	cout<<"Overlap but no aligne: "<<notAligned<<" Percent : "<<(100*float(notAligned))/(alignedRead+notAligned)<<endl;
-		// 	auto end=chrono::system_clock::now();auto waitedFor=end-startChrono;
-		// 	cout<<"Reads/seconds : "<<readNumber/(chrono::duration_cast<chrono::seconds>(waitedFor).count()+1)<<endl;
-		// 	// cout<<"Overlap per reads : "<<(overlaps)/(alignedRead+notAligned)<<endl;
-		// 	cout<<endl;
-		// }
 	}
 }

@@ -62,17 +62,16 @@ public:
 	ofstream pathFile, noOverlapFile, notMappedFile;
 	FILE * pathFilef;
 	FILE * notMappedFilef;
-	MPHF leftMPHF,rightMPHF;
+	MPHF leftMPHF,rightMPHF,anchorsMPHF;
 	vector<unitigIndices> leftIndices,rightIndices;
+	vector<pair<uint32_t,uint32_t>> anchorsPosition;
 	atomic<uint> alignedRead, readNumber, noOverlapRead, notAligned, unitigNumber, overlaps,iter;
 	uint k;
-	// unordered_map <kmer,vector<uint32_t>> right;
-	// unordered_map <kmer,vector<uint32_t>> left;
 	vector<string> unitigs;
 	kmer offsetUpdate;
 	uint coreNumber;
 	uint gammaFactor;
-	uint errorsMax,tryNumber;
+	uint errorsMax,tryNumber,fracKmer;
 	mutex unitigMutex,unitigMutex2, readMutex, indexMutex, pathMutex, noOverlapMutex, notMappedMutex;
 	string unitigFileName,pathToWrite;
 	chrono::system_clock::time_point startChrono;
@@ -91,7 +90,8 @@ public:
 		coreNumber=cores;
 		errorsMax=errorsAllowed;
 		tryNumber=effort;
-		gammaFactor=2;
+		gammaFactor=10;
+		fracKmer=1;
 		fullMemory=true;
 		correctionMode=bcorrectionMode;
 		partial=bpartial;
@@ -129,10 +129,10 @@ public:
 	uint coverGreedy(const string& read, const vector<pair<kmer,uint>>& listOverlap, const uint start, uint end, vector<uNumber>& path, uint  errors, bool&);
 	pair<uint,int> mapOnRight2(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap, const  vector<pair<kmer,uint>>& listOverlap, bool& ended,uint start, uint errors);
 	uint mapOnRightEndGreedy(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint errors);
-	uint checkBeginGreedy(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors);
+	uint checkBeginGreedy(const string& read,const pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors);
 	uint mapOnLeftEndGreedy(const string &read, vector<uNumber>& path, const pair<kmer, uint>& overlap , uint errors);
 	vector<uNumber> alignReadExhaustive(const string& read, bool& overlapFound, uint errors);
-	uint checkEndGreedy(const string& read, pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors);
+	uint checkEndGreedy(const string& read,const pair<kmer, uint>& overlap, vector<uNumber>& path, uint errors);
 	string readUnitig(uint position);
 	vector<pair<string,uNumber>> getBegin(kmer);
 	vector<pair<string,uNumber>> getEnd(kmer);
@@ -172,6 +172,8 @@ public:
 	vector<pair<string,uNumber>> getBeginOpti(kmer bin, uNumber last);
 	vector<pair<string,uNumber>> getEndOpti(kmer bin, uNumber last);
 	string printPath(const vector<int32_t>& path);
+	vector<uNumber> alignReadGreedyAnchors(const string& read, bool& overlapFound, uint errorMax, bool& rc);
+	vector<pair<pair<uint,uint>,uint>> getNAnchors(const string& read,uint n);
 
 };
 
