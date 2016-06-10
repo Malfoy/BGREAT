@@ -378,10 +378,12 @@ vector<pair<pair<uint,uint>,uint>> Aligner::getNAnchors(const string& read,uint 
 	uint64_t hash;
 	kmer num(str2num(read.substr(0,k))),rcnum(rcb(num,k)), rep(min(num, rcnum));
 	for(uint i(0);;++i){
+		//~ cout<<rep<<endl;
 		hash=anchorsMPHF.lookup(rep);
-		if(hash<anchorsPosition.size()){
-			//TODO what happend here ???....
+		if(hash!=ULLONG_MAX){
 			list.push_back({anchorsPosition[hash],i});
+		}else{
+			//~ cout<<i<<endl;
 		}
 		if(list.size()>=n){
 			return list;
