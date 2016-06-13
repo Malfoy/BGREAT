@@ -393,12 +393,6 @@ void Aligner::alignPartGreedy(){
 					if(rc){
 						corrected=reverseComplements(corrected);
 					}
-					//~ if(corrected!=read and corrected!=reverseComplements(read)){
-						//~ cout<<"bug"<<endl;
-						//~ cout<<read<<endl;
-						//~ cout<< corrected<<endl;
-						//~ exit(0);
-					//~ }
 					header+='\n'+corrected+'\n';
 					pathMutex.lock();
 					{
@@ -414,10 +408,6 @@ void Aligner::alignPartGreedy(){
 					pathMutex.unlock();
 				}
 			}else{
-				//~ cout<<">lol"<<endl;
-				//~ cout<<read<<endl;
-				//~ cout<<"END"<<endl;
-				//~ cin.get();
 				if(false){
 					noOverlapMutex.lock();
 					{

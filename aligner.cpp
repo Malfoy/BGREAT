@@ -270,9 +270,6 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
 	int offset(numbers[0]);
 	string path(getUnitig(numbers[1]));
-	//~ cout<<"recover"<<endl;
-	//~ cout<<numbers[1]<<endl;
-	//~ cout<<path<<endl;
 	for(uint i(2); i<numbers.size(); ++i){
 		string unitig(getUnitig(numbers[i])),inter(compactionEnd(path, unitig, k-1));
 		if(inter.empty()){
