@@ -271,7 +271,7 @@ string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
 	//~ for(uint i(0); i<numbers.size(); ++i){
 		//~ cout<<numbers[i]<<" ";
 	//~ }
-	cout<<endl;
+	//~ cout<<endl;
 	int offset(numbers[0]);
 	string path(getUnitig(numbers[1]));
 	for(uint i(2); i<numbers.size(); ++i){
