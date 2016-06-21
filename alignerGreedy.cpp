@@ -77,6 +77,8 @@ vector<uNumber> Aligner::alignReadGreedyAnchors(const string& read, bool& overla
 			unitig=reverseComplements(unitig);
 			positionUnitig=unitig.size()-k-positionUnitig;
 			returned=true;
+		}else{
+			returned=false;
 		}
 		if(positionRead>=positionUnitig){
 			if(read.size()-positionRead>=unitig.size()-positionUnitig){
@@ -130,6 +132,7 @@ vector<uNumber> Aligner::alignReadGreedyAnchors(const string& read, bool& overla
 				uint errors(missmatchNumber(unitig.substr(positionUnitig-positionRead),read.substr(0,unitig.size()+positionRead-positionUnitig),errorMax));
 				if(errors<=errorMax){
 					if(returned){
+						//~ cout<<"returned"<<endl;
 						pathEnd={(int)positionUnitig-(int)positionRead,-(int)unitigNumber};
 					}else{
 						pathEnd={(int)positionUnitig-(int)positionRead,(int)unitigNumber};

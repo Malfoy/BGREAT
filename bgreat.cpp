@@ -60,7 +60,7 @@ int main(int argc, char ** argv){
 	string notAlignedFile("notAligned.fa");
 	int errors(2);
 	int threads(1);
-	int ka(31);
+	int ka(30);
 	int c;
 	int effort(2);
 	bool brute(false),incomplete(false),fastq(false),pathOption(false),correctionMode(false),dogMode(false);
@@ -115,13 +115,12 @@ int main(int argc, char ** argv){
                	supervisor.alignAll(!brute,reads);
        	}else{
 				cout<<"-r read_file"<<endl
-				<<"-k k_value (31)"<<endl
+				<<"-k k_value (30)"<<endl
               	<<"-g unitig_file (unitig.dot)"<<endl
               	<<"-m n_missmatch (2)"<<endl
               	<<"-t n_thread (1)"<<endl
 				<<"-e effort put in mapping (2)"<<endl
               	<<"-f path_file (paths)"<<endl
-              	<<"-o no_overlap_file (noOverlap.fa)"<<endl
               	<<"-a not_aligned_file (notAligned.fa)"<<endl
               	<<"-p to align on paths instead of walks"<<endl
               	<<"-q for fastq read file"<<endl

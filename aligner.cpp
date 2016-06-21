@@ -268,10 +268,15 @@ vector<pair<string,uNumber>> Aligner::getBegin(kmer bin){
 
 
 string Aligner::recoverPath(vector<uNumber>& numbers,uint size){
+	//~ for(uint i(0); i<numbers.size(); ++i){
+		//~ cout<<numbers[i]<<" ";
+	//~ }
+	cout<<endl;
 	int offset(numbers[0]);
 	string path(getUnitig(numbers[1]));
 	for(uint i(2); i<numbers.size(); ++i){
 		string unitig(getUnitig(numbers[i])),inter(compactionEnd(path, unitig, k-1));
+		//~ cout<<unitig<<" "<<inter<<endl;
 		if(inter.empty()){
 			cout<<"bug compaction"<<endl;
 			cout<<path<<" "<<unitig<<endl;
