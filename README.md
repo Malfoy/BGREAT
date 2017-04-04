@@ -2,6 +2,10 @@ Bgreat
 =====
 De Bruijn Graph Read Mapping Tool
 
+Warning :
+This repo is no longer maintened.
+If you are interested by such tool see https://github.com/Malfoy/BGREAT2
+
 Compilation
 ====
 	$make
