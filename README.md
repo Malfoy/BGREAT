@@ -60,7 +60,7 @@ We propose the following method to compute the unitigs from a set of reads:
 
 Unitig computation with BCALM2 (see https://github.com/GATB/bcalm) :
 
-	&./bcalm -in reads.fa -k 31 -abundance 3
+	&./bcalm -in reads.fa -kmer-size 31 -abundance-min 3
 	&./bglue -in unitigs.h5 -k 31
 
 Output
